@@ -2,6 +2,8 @@
 session_start();
 include "../koneksi.php";
 
+// Abott tenann
+
 function helper($data, $data2){
   if($data == $data2){
     return true;
