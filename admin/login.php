@@ -5,11 +5,7 @@ $koneksi = new Koneksi();
 $h = $koneksi->connect();
 if (isset($_SESSION['super_user'])){
 	header("Location: index.php");
-	// coba
 }
-
-
-// Tess Ping 123 123
 
 // $hasil=mysqli_query($h, "SELECT * from super_user where no_id = 'id'");
 // $row = mysqli_fetch_assoc($hasil);
