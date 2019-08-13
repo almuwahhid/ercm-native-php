@@ -79,6 +79,9 @@ if(isset($_GET['page'])){
   }else if ($_GET['page']=="tambahsupplier") {
     $a = 7;
 
+  }else if ($_GET['page']=="laporanproduksi") {
+    $a = 8;
+
   }else if ($_GET['page']=="daftarkategori") {
     $a = 9;
   }else if ($_GET['page']=="tambahkategori") {
@@ -349,9 +352,9 @@ if(isset($_GET['page'])){
                   <ul class="nav flex-column">
                     <li class="nav-item">
                       <?php
-                      if(helper(2, $account->id_level) || helper(3, $account->id_level)){
+                      if(helper(1, $account->id_level) || helper(3, $account->id_level)){
                         ?>
-                        <a class="nav-link" href="index.php?page=daftarorder">Laporan Produksi</a>
+                        <a class="nav-link" href="index.php?page=laporanproduksi">Laporan Produksi</a>
                         <?php
                       }
                       ?>
@@ -462,6 +465,9 @@ if(isset($_GET['page'])){
             include 'views/kategori/tambahkategori.php';
           }else if ($_GET['page']=="editkategori") {
             include 'views/kategori/editkategori.php';
+
+          }else if ($_GET['page']=="laporanproduksi") {
+            include 'views/laporan/laporanproduksi.php';
 
           }else if ($_GET['page']=="setting") {
             include 'views/setting.php';
