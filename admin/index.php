@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "../koneksi.php";
+include "helper.php";
 
 // Abott tenann
 // coba
@@ -116,8 +117,17 @@ if(isset($_GET['page'])){
   <link rel="stylesheet" href="assets/vendor/charts/c3charts/c3.css">
   <link rel="stylesheet" href="assets/vendor/fonts/flag-icon-css/flag-icon.min.css">
 
+  <script src="assets/js/bootstrap.min.js"></script>
+
   <link rel="stylesheet" href="assets/css/style-skripsi.css">
   <title>Admin Penjualan</title>
+  <script type="text/javascript">
+  $(function () {
+    $('.datetimepickerz').each(function(){
+      $(this).datetimepicker();
+    });
+  });
+  </script>
 </head>
 
 <body>
