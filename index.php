@@ -66,7 +66,7 @@
                             <div class="col-md-7 col-lg-8 col-sm-5 col-xs-3">
                                 <nav class="main__menu__nav hidden-xs hidden-sm">
                                     <ul class="main__menu">
-                                        <li class="drop"><a href="index.html">Daftar Produk</a></li>
+                                        <li class="drop"><a href="index.php">Daftar Produk</a></li>
 
 
                                         <li class="drop"><a href="#">Product</a>
@@ -216,6 +216,8 @@
               if(isset($_GET['page'])){
                 if ($_GET['page']=="produkkami") {
                   include 'user/produkkami.php';
+                }else if ($_GET['page']=="produk-details") {
+                    include 'user/produk-details.php';
                 }else if ($_GET['page']=="logout") {
                     session_destroy();
                     echo "<meta http-equiv='refresh' content='0; url=login_user.php'>";

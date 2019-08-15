@@ -1,25 +1,7 @@
 <?php
-$jumlah = mysqli_num_rows(mysqli_query($h, "SELECT * from produk"));
-$banyak_data = floor($jumlah/5)+1;
-$limit = 0;
-if(isset($_GET["r"])){
-  $active_list = $_GET["r"];
-  $first = ($_GET["r"]*5);
-  $limit = $first-5;
-  $query_produk = mysqli_query($h, "SELECT * from produk
-                                    ORDER BY produk.nama_produk ASC LIMIT 5 OFFSET ".$limit);
-}else{
-  if($banyak_data>1){
-      $query_produk = mysqli_query($h, "SELECT * from produk
-                                        ORDER BY produk.nama_produk ASC LIMIT 5");
-    }else{
-      $query_produk = mysqli_query($h, "SELECT * from produk
-                                        ORDER BY produk.nama_produk ASC");
-    }
-}
-if($query_produk){
-	$no = $limit;
-}
+  $iddata=$_GET['id'];
+  $hasil=mysqli_query($h, "SELECT * from produk where produk_id = '$iddata'");
+  $row = mysqli_fetch_assoc($hasil);
 ?>
 
 <html class="js sizes customelements history pointerevents postmessage webgl websockets cssanimations csscolumns csscolumns-width csscolumns-span csscolumns-fill csscolumns-gap csscolumns-rule csscolumns-rulecolor csscolumns-rulestyle csscolumns-rulewidth csscolumns-breakbefore csscolumns-breakafter csscolumns-breakinside flexbox picture srcset webworkers" lang="en"><head>
@@ -60,7 +42,7 @@ if($query_produk){
 <div class="row">
     <div class="col-xs-12">
         <div class="section__title--2 text-center">
-            <h2 class="title__line">Daftar produk kami</h2>
+            <h2 class="title__line">Detail Produk</h2>
 
 
     </div>
@@ -72,16 +54,13 @@ if($query_produk){
     <div class="row">
         <div class="product__list clearfix mt--30" style="position: relative; height: 0px;">
             <!-- Start Single Category -->
-            <?php
-            while($row = $query_produk->fetch_array()){
-              $no++;
-              ?>
+
               <div class="col-md-4 col-lg-3 col-sm-4 col-xs-12">
                 <div class="category">
                   <div class="ht__cat__thumb">
-                    <a href="index.php?page=produk-details&id=<?php echo $row['produk_id']?>">
+
                       <img src="admin/data/photos/<?php echo $row['gambar'];?>" alt="product images"></div>
-                    </a>
+
                   </div>
                   <div class="fr__hover__info">
                     <ul class="product__action">
@@ -89,42 +68,21 @@ if($query_produk){
                     </ul>
                   </div>
                   <div class="fr__product__inner">
-                    <h4><a href="index.php?page=produk-details"><?php echo $row['nama_produk'];?></a></h4>
                     <ul class="fr__pro__prize">
-                      <li class="old__prize"><?php echo $row['harga'];?></li>
+                      <li class="old__prize"><h4>Nama Produk : <?php echo $row['nama_produk'];?></h4></li>
+                    </ul>
+
+                    <ul class="fr__pro__prize">
+                      <li class="old__prize"><h4>Deskripsi : <?php echo $row['deskripsi'];?></h4></li>
+                    </ul>
+
+                    <ul class="fr__pro__prize">
+                      <li class="old__prize"><h4>Harga : <?php echo $row['harga'];?></h4></li>
                     </ul>
                   </div>
                 </div>
-              <?php } ?>
+
             </div>
-
-            <div class="col-md-4 col-lg-3 col-sm-4 col-xs-12">
-              <div class="category">
-                <div class="ht__cat__thumb">
-                  <a href="product-details.html">
-                    <img src="images/product/8.jpg" alt="product images">
-                  </a>
-                </div>
-                <div class="fr__hover__info">
-                  <ul class="product__action">
-
-
-                    <li><a href="cart.html"><i class="icon-handbag icons"></i></a></li>
-
-
-                  </ul>
-                </div>
-                <div class="fr__product__inner">
-                  <h4><a href="product-details.html">Product Title Here </a></h4>
-                  <ul class="fr__pro__prize">
-                    <li class="old__prize">$30.3</li>
-                    <li>$25.9</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <!-- End Single Category -->
-
         </div>
     </div>
 

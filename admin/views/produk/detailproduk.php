@@ -106,7 +106,7 @@
                   </ul>
                 </nav>
                 <div class="custom-file mb-3">
-                  <a href="index.php?page=daftarproduk" class="col-xl-4 centerHorizontal btn btn-primary"<input type="submit">Kembali</a>
+                  <a href="index.php?page=daftarproduk" input type="submit" class="centerHorizontal btn btn-primary">Kembali</a>
                 </div>
               </div>
             </div>
