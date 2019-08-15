@@ -55,11 +55,11 @@ if(isset($_GET['page'])){
   }else if ($_GET['page']=="daftarbahan") {
     $a = 4;
 
-  }else if ($_GET['page']=="editkirimbahan") {
+  }else if ($_GET['page']=="editbelibahan") {
     $a = 5;
-  }else if ($_GET['page']=="tambahkirimbahan") {
+  }else if ($_GET['page']=="tambahbelibahan") {
     $a = 5;
-  }else if ($_GET['page']=="daftarkirimbahan") {
+  }else if ($_GET['page']=="daftarbelibahan") {
     $a = 5;
 
   }else if ($_GET['page']=="editorder") {
@@ -81,6 +81,10 @@ if(isset($_GET['page'])){
     $a = 7;
 
   }else if ($_GET['page']=="laporanproduksi") {
+    $a = 8;
+  }else if ($_GET['page']=="laporanbelibahan") {
+    $a = 8;
+  }else if ($_GET['page']=="laporanorderproduk") {
     $a = 8;
 
   }else if ($_GET['page']=="daftarkategori") {
@@ -261,14 +265,14 @@ if(isset($_GET['page'])){
               if(helper(4, $account->id_level)){
                 ?>
                 <li class="nav-item ">
-                  <a class="nav-link <?php if($a == 5) echo 'active'; ?>" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-5" aria-controls="submenu-5"><i class="fa fa-fw fa-cube"></i>Pengiriman Bahan<span class="badge badge-success">5</span></a>
+                  <a class="nav-link <?php if($a == 5) echo 'active'; ?>" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-5" aria-controls="submenu-5"><i class="fa fa-fw fa-cube"></i>Pembelian Bahan<span class="badge badge-success">5</span></a>
                   <div id="submenu-5" class="collapse submenu" style="">
                     <ul class="nav flex-column">
                       <li class="nav-item">
-                        <a class="nav-link" href="index.php?page=daftarkirimbahan">List Pengiriman Bahan</a>
+                        <a class="nav-link" href="index.php?page=daftarbelibahan">List Pembelian Bahan</a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" href="index.php?page=tambahkirimbahan">Tambah Pengiriman Bahan</a>
+                        <a class="nav-link" href="index.php?page=tambahbelibahan">Tambah Pembelian Bahan</a>
                       </li>
                     </ul>
                   </div>
@@ -369,12 +373,12 @@ if(isset($_GET['page'])){
                       }
                       ?>
 
-                      <a class="nav-link" href="index.php?page=daftarorder">Laporan Pembelian Bahan</a>
+                      <a class="nav-link" href="index.php?page=laporanbelibahan">Laporan Pembelian Bahan</a>
 
                       <?php
                       if(helper(2, $account->id_level) || helper(1, $account->id_level) || helper(3, $account->id_level)){
                         ?>
-                        <a class="nav-link" href="index.php?page=daftarorder">Laporan Order Produk</a>
+                        <a class="nav-link" href="index.php?page=laporanorderproduk">Laporan Order Produk</a>
                         <?php
                       }
                       ?>
@@ -434,12 +438,12 @@ if(isset($_GET['page'])){
           }else if ($_GET['page']=="tambahbahan") {
             include 'views/bahan/tambahbahan.php';
 
-          }else if ($_GET['page']=="daftarkirimbahan") {
-            include 'views/kirimbahan/daftarkirimbahan.php';
-          }else if ($_GET['page']=="tambahkirimbahan") {
-            include 'views/kirimbahan/tambahkirimbahan.php';
-          }else if ($_GET['page']=="editkirimbahan") {
-            include 'views/kirimbahan/editkirimbahan.php';
+          }else if ($_GET['page']=="daftarbelibahan") {
+            include 'views/belibahan/daftarbelibahan.php';
+          }else if ($_GET['page']=="tambahbelibahan") {
+            include 'views/belibahan/tambahbelibahan.php';
+          }else if ($_GET['page']=="editbelibahan") {
+            include 'views/belibahan/editbelibahan.php';
 
           }else if ($_GET['page']=="daftarorder") {
             include 'views/order/daftarorder.php';
@@ -478,6 +482,10 @@ if(isset($_GET['page'])){
 
           }else if ($_GET['page']=="laporanproduksi") {
             include 'views/laporan/laporanproduksi.php';
+          }else if ($_GET['page']=="laporanbelibahan") {
+            include 'views/laporan/laporanbelibahan.php';
+          }else if ($_GET['page']=="laporanorderproduk") {
+            include 'views/laporan/laporanorderproduk.php';
 
           }else if ($_GET['page']=="setting") {
             include 'views/setting.php';
