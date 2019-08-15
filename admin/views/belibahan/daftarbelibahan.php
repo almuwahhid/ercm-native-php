@@ -36,13 +36,13 @@ if($query_purchase_bahan){
     <div class="row">
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <div class="page-header">
-          <h2 class="pageheader-title">Daftar Pengiriman Bahan</h2>
+          <h2 class="pageheader-title">Daftar Pembelian Bahan</h2>
           <p class="pageheader-text">Nulla euismod urna eros, sit amet scelerisque torton lectus vel mauris facilisis faucibus at enim quis massa lobortis rutrum.</p>
           <div class="page-breadcrumb">
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Pengiriman Bahan</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Daftar Pengiriman Bahan</li>
+                <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Pembelian Bahan</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Daftar Pembelian Bahan</li>
               </ol>
             </nav>
           </div>
@@ -62,14 +62,14 @@ if($query_purchase_bahan){
         <!-- ============================================================== -->
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
           <div class="card">
-            <h5 class="card-header">Pengiriman Bahan yang sudah ditambahkan</h5>
+            <h5 class="card-header">Pembelian Bahan yang sudah ditambahkan</h5>
             <div class="card-body p-0">
               <div class="table-responsive">
                 <table class="table">
                   <thead class="bg-light">
                     <tr class="border-0">
                       <th class="border-0 centerHorizontal" style="width:20px">No</th>
-                      <th class="border-0">Tanggal Pengiriman Bahan</th>
+                      <th class="border-0">Tanggal Pembelian Bahan</th>
                       <th class="border-0">Jumlah KBP</th>
                       <th class="border-0">Biaya Bahan</th>
                       <th class="border-0">Tanggal Selesai Produksi</th>
@@ -103,10 +103,10 @@ if($query_purchase_bahan){
                           <?php echo $row['nama'];?>
                         </td>
                         <td>
-                          <a href="index.php?page=editkirimbahan&id=<?php echo $row['id']?>">
+                          <a href="index.php?page=editbelibahan&id=<?php echo $row['id']?>">
                             <i class="fas fa-edit"></i>
                           </a> &nbsp;&nbsp;
-                          <a href="#" onclick="hapuskirimbahan('index.php?page=daftarkirimbahan&delete=<?php echo $row['id']; ?>')">
+                          <a href="#" onclick="hapusbelibahan('index.php?page=daftarbelibahan&delete=<?php echo $row['id']; ?>')">
                             <i class="fas fa-trash"></i>
                           </a>
                         </td>
@@ -158,20 +158,20 @@ if (isset($_GET['delete'])) {
     ?>
     <script type="text/javascript">
     // alert("berhasil menghapus purchase_bahan");
-    window.location.href="index.php?page=daftarkirimbahan";
+    window.location.href="index.php?page=daftarbelibahan";
     </script>
     <?php
   }else {
     ?>
     <script language="javascript">
-    alert ("Pengiriman Bahan gagal Di Hapus"); document.location="index.php?page=daftarkirimbahan";
+    alert ("Pembelian Bahan gagal Di Hapus"); document.location="index.php?page=daftarbelibahan";
     </script>
     <?php
   }
 }
 ?>
 <script>
-function hapuskirimbahan(url){
+function hapusbelibahan(url){
   var x = confirm("Apakah Anda ingin menghapus data ini?");
   if(x){
     window.location.href = url;
