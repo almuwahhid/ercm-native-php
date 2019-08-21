@@ -1,7 +1,9 @@
 <?php
   session_start();
-  if (!isset($_SESSION['customers'])){
-    header("Location: login_user.php");
+  $isUserLogin = false;
+  if (isset($_SESSION['ercm_user'])){
+    // header("Location: login_user.php");
+    $isUserLogin = true;
   }
   include "koneksi.php";
 
@@ -13,7 +15,7 @@
 <html class="js sizes customelements history pointerevents postmessage webgl websockets cssanimations csscolumns csscolumns-width csscolumns-span csscolumns-fill csscolumns-gap csscolumns-rule csscolumns-rulecolor csscolumns-rulestyle csscolumns-rulewidth csscolumns-breakbefore csscolumns-breakafter csscolumns-breakinside flexbox picture srcset webworkers" lang="en"><head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>ERCM</title>
+    <title>Asbab - eCommerce HTML5 Templatee</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -109,10 +111,19 @@
                                       <ul class="main__menu">
                                         <li class="drop"><a href="#" style="color: black;font-size: 20px;"><i class="icon-user icons"></i></a>
                                             <ul class="dropdown">
-                                                <li><a href="product-grid.html">Akun Saya</a></li>
-                                                <li><a href="product-details.html">Login</a></li>
+                                              <?php
+                                              if($isUserLogin){
+                                                ?>
+                                                <li><a href="login.php">Akun Saya</a></li>
                                                 <li><a href="#">Keranjang Saya</a></li>
                                                 <li><a href="index.php?page=logout">Logout</a></li>
+                                                <?php
+                                              } else {
+                                                ?>
+                                                <li><a href="login.php">Login</a></li>
+                                                <?php
+                                              }
+                                               ?>
                                             </ul>
                                         </li>
                                       </ul>
@@ -220,7 +231,7 @@
                     include 'user/produk-details.php';
                 }else if ($_GET['page']=="logout") {
                     session_destroy();
-                    echo "<meta http-equiv='refresh' content='0; url=login_user.php'>";
+                    echo "<meta http-equiv='refresh' content='0; url=index.php'>";
                   }
                 }else{
                   include 'user/produkkami.php';

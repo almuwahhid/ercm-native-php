@@ -3,7 +3,7 @@ session_start();
 require_once 'koneksi.php';
 $koneksi = new Koneksi();
 $h = $koneksi->connect();
-if (isset($_SESSION['customers'])){
+if (isset($_SESSION['ercm_user'])){
 	header("Location: index.php");
 }
 ?>
@@ -205,8 +205,7 @@ body {
          ";
       }else if ($data['email'] == $uname){
 				if ($data['password'] == $mypassword){
-          $_SESSION['customers'] = $data['customers_id'];
-          $_SESSION['nama'] = $data['nama'];
+          $_SESSION['ercm_user'] = json_encode($data);
           echo "<meta http-equiv='refresh' content='0; url=index.php'>";
         }
         else{
