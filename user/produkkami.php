@@ -98,7 +98,7 @@ if($query_produk){
               <?php } ?>
             </div>
 
-            <div class="col-md-4 col-lg-3 col-sm-4 col-xs-12">
+            <!-- <div class="col-md-4 col-lg-3 col-sm-4 col-xs-12">
               <div class="category">
                 <div class="ht__cat__thumb">
                   <a href="product-details.html">
@@ -122,7 +122,7 @@ if($query_produk){
                   </ul>
                 </div>
               </div>
-            </div>
+            </div> -->
             <!-- End Single Category -->
 
         </div>
