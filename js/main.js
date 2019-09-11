@@ -20,9 +20,9 @@
     06. Search Bar
     07. Shopping Cart Area
     08. Filter Area
-    09. Toogle Menu   
-    10. User Menu 
-    11. Menu 
+    09. Toogle Menu
+    10. User Menu
+    11. Menu
     12. Menu Dropdown
     13. Overlay Close
     14. Testimonial Image Slider As Nav
@@ -30,7 +30,7 @@
     16. Price Slider Active
     17. Accordion
     18. Ship to another
-    19. Payment credit card    
+    19. Payment credit card
     20 Slider Activations
 
 
@@ -47,7 +47,7 @@
 /*-------------------------------------------
     01. jQuery MeanMenu
 --------------------------------------------- */
-    
+
     $('.mobile-menu nav').meanmenu({
         meanMenuContainer: '.mobile-menu-area',
         meanScreenWidth: "991",
@@ -63,15 +63,15 @@
 
 /*-------------------------------------------
     03. Product  Masonry (width)
---------------------------------------------- */ 
+--------------------------------------------- */
 
     $('.htc__product__container').imagesLoaded( function() {
-      
+
         // filter items on button click
         $('.product__menu').on( 'click', 'button', function() {
           var filterValue = $(this).attr('data-filter');
           $grid.isotope({ filter: filterValue });
-        }); 
+        });
         // init Isotope
         var $grid = $('.product__list').isotope({
           itemSelector: '.single__pro',
@@ -95,10 +95,10 @@
 
 /*-------------------------------------------
     04. Sticky Header
---------------------------------------------- */ 
+--------------------------------------------- */
     var win = $(window);
     var sticky_id = $("#sticky-header-with-topbar");
-        win.on('scroll',function() {    
+        win.on('scroll',function() {
         var scroll = win.scrollTop();
         if (scroll < 245) {
         sticky_id.removeClass("scroll-header");
@@ -118,10 +118,10 @@
     });
 
 
-/*------------------------------------    
+/*------------------------------------
     06. Search Bar
---------------------------------------*/ 
-    
+--------------------------------------*/
+
     $( '.search__open' ).on( 'click', function () {
         $( 'body' ).toggleClass( 'search__box__show__hide' );
         return false;
@@ -133,7 +133,7 @@
     });
 
 
-/*------------------------------------    
+/*------------------------------------
     07. Shopping Cart Area
 --------------------------------------*/
 
@@ -141,7 +141,10 @@
         e.preventDefault();
         $('.shopping__cart').addClass('shopping__cart__on');
         $('.body__overlay').addClass('is-visible');
-
+        $('#shopping__cart_wrapper').show();
+        $('#shopping__cart_pesan').hide();
+        $('#shopping__cart_edit_profile').hide();
+        $('#shopping__cart_profile').hide();
     });
 
     $('.offsetmenu__close__btn').on('click', function(e) {
@@ -150,8 +153,7 @@
         $('.body__overlay').removeClass('is-visible');
     });
 
-
-/*------------------------------------    
+/*------------------------------------
     08. Filter Area
 --------------------------------------*/
 
@@ -169,7 +171,7 @@
     });
 
 
-/*------------------------------------    
+/*------------------------------------
     09. Toogle Menu
 --------------------------------------*/
 
@@ -187,7 +189,7 @@
     });
 
 
-/*------------------------------------    
+/*------------------------------------
     10. User Menu
 --------------------------------------*/
 
@@ -206,8 +208,8 @@
 
 
 
-/*------------------------------------    
-    11. Menu 
+/*------------------------------------
+    11. Menu
 --------------------------------------*/
 
     $('.menu__click').on('click', function(e) {
@@ -226,7 +228,7 @@
     });
 
 
-/*------------------------------------    
+/*------------------------------------
     12. Menu Dropdown
 --------------------------------------*/
     function offCanvasMenuDropdown(){
@@ -244,7 +246,7 @@
     offCanvasMenuDropdown();
 
 
-/*------------------------------------    
+/*------------------------------------
     13. Overlay Close
 --------------------------------------*/
 
@@ -278,7 +280,7 @@
         settings: {
           dots: false,
           slidesToShow: 1,
-          slidesToScroll: 1,  
+          slidesToScroll: 1,
           centerPadding: '10px',
           }
       },
@@ -340,7 +342,6 @@
     });
     $("#amount").val("$" + $("#slider-range").slider("values", 0) +
       " - $" + $("#slider-range").slider("values", 1));
-
 
 
 
@@ -430,7 +431,3 @@
 
 
 })(jQuery);
-
-
-
-

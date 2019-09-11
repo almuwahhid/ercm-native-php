@@ -21,6 +21,10 @@ function activateFnc(){
     $(this).css("height", $(this).width()/2);
   });
 
+  $('.heightSepertiga').each(function(){
+    $(this).css("height", $(this).width()/3);
+  });
+
   $('.heightWindow').each(function(){
     $(this).css("height", $(window).height());
   });
@@ -59,7 +63,7 @@ function activateFnc(){
   $('.content-main').each(function(){
     $(this).height($(window).height());
   });
-  $('.potongtext').each(function(){  
+  $('.potongtext').each(function(){
     if(isian.length>30){
       $(this).html(isian.substr(0, 35)+"...").text();
     }
@@ -87,6 +91,10 @@ $('document').ready(function() {
 
     $('.widthRect').each(function(){
       $(this).css("width", $(this).height());
+    });
+
+    $('.heightSepertiga').each(function(){
+      $(this).css("height", $(this).width()/3);
     });
 
     $('.heightRect').each(function(){

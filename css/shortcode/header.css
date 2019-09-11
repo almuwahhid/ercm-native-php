@@ -166,7 +166,7 @@ nav.off__canvars--menu ul li {
 
 .off__canvars__wrap.right--side.width-half{
   opacity: 0;
-  visibility: hidden; 
+  visibility: hidden;
   z-index: -999;
   right: -90%;
 }
@@ -705,7 +705,7 @@ nav.off__canvars--menu ul li ul li a:hover {
   Toggle menu
 ----------------------------*/
 
-.shopping__cart, 
+.shopping__cart,
 .user__meta  {
     background: #eeeeee none repeat scroll 0 0;
     box-shadow: 0 0 85px rgba(0, 0, 0, 0.2);
@@ -746,8 +746,8 @@ nav.off__canvars--menu ul li ul li a:hover {
     padding-bottom: 50px;
     right: calc(0px - 16px);
 }
-.offsetmenu__inner, 
-.shopping__cart__inner, 
+.offsetmenu__inner,
+.shopping__cart__inner,
 .user__meta__inner {
     height: 100%;
     padding: 60px 50px 60px;
@@ -956,7 +956,7 @@ h4.offset__title {
     display: block;
 }
 .shp__pro__thumb a img {
-    max-width: 60px;
+    max-width: 100px;
 }
 .remove__btn {
     text-align: right;
