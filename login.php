@@ -3,7 +3,7 @@ session_start();
 require_once 'koneksi.php';
 $koneksi = new Koneksi();
 $h = $koneksi->connect();
-if (isset($_SESSION['ercm_user'])){
+if (isset($_SESSION['customers'])){
 	header("Location: index.php");
 }
 ?>
@@ -16,6 +16,9 @@ if (isset($_SESSION['ercm_user'])){
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+
+	<script src="admin/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
+	<script src="admin/assets/js/style.js"></script>
   <style>
   :root {
   --input-padding-x: 1.5rem;
@@ -158,8 +161,8 @@ body {
 <body>
   <div class="container">
     <div class="row">
-      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-        <div class="card card-signin my-5">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto" style="height:100vh">
+        <div class="card card-signin centerVertical">
           <div class="card-body">
             <h5 class="card-title text-center">Sign In</h5>
             <form class="form-signin" action="" method="post">
@@ -173,10 +176,10 @@ body {
                 <label for="inputPassword">Password</label>
               </div>
 
-              <div class="custom-control custom-checkbox mb-3">
+              <!-- <div class="custom-control custom-checkbox mb-3">
                 <input type="checkbox" class="custom-control-input" id="customCheck1">
                 <label class="custom-control-label" for="customCheck1">Remember password</label>
-              </div>
+              </div> -->
               <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Sign in</button>
               </form>
           </div>
@@ -200,7 +203,7 @@ body {
         echo "
         <script>
           window.alert('Email atau Password tidak boleh kosong');
-          window.location='login_user.php'
+          window.location='login.php'
         </script>
          ";
       }else if ($data['email'] == $uname){
@@ -212,7 +215,7 @@ body {
           echo "
           <script>
             window.alert('Password salah');
-            window.location='login_user.php'
+            window.location='login.php'
           </script>
            ";
         }
@@ -220,7 +223,7 @@ body {
         echo "
         <script>
           window.alert('Anda tidak memiliki akses');
-          window.location='login_user.php'
+          window.location='login.php'
         </script>
          ";
       }

@@ -2,6 +2,9 @@
 $jumlah = mysqli_num_rows(mysqli_query($h, "SELECT * from produk"));
 $banyak_data = floor($jumlah/5)+1;
 $limit = 0;
+$query_slideshow = mysqli_query($h, "SELECT * from produk ORDER BY RAND() ASC LIMIT 3 ");
+$count_slideshow = mysqli_num_rows(mysqli_query($h, "SELECT * from produk ORDER BY RAND() ASC LIMIT 3 "));
+
 if(isset($_GET["r"])){
   $active_list = $_GET["r"];
   $first = ($_GET["r"]*5);
@@ -21,15 +24,6 @@ if($query_produk){
 	$no = $limit;
 }
 ?>
-
-<html class="js sizes customelements history pointerevents postmessage webgl websockets cssanimations csscolumns csscolumns-width csscolumns-span csscolumns-fill csscolumns-gap csscolumns-rule csscolumns-rulecolor csscolumns-rulestyle csscolumns-rulewidth csscolumns-breakbefore csscolumns-breakafter csscolumns-breakinside flexbox picture srcset webworkers" lang="en"><head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Asbab - eCommerce HTML5 Templatee</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Place favicon.ico in the root directory -->
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
@@ -51,18 +45,16 @@ if($query_produk){
     <!-- User style -->
     <link rel="stylesheet" href="css/custom.css">
 
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
 
     <!-- Modernizr JS -->
     <script src="js/vendor/modernizr-3.5.0.min.js"></script>
-</head>
 
-<body>
 <div class="row">
     <div class="col-xs-12">
-        <div class="section__title--2 text-center">
-            <h2 class="title__line">Daftar produk kami</h2>
-
-
+        <div class="section__title--2">
+            <!-- <span style="font-size:25px">Daftar produk kami</span> -->
     </div>
 </div>
 
@@ -71,29 +63,95 @@ if($query_produk){
 <div class="htc__product__container">
     <div class="row">
         <div class="product__list clearfix mt--30" style="position: relative; height: 0px;">
+          <div class="col-md-12" style="margin:20px;padding:background-color:white">
+            <?php
+            if($count_slideshow < 0){
+
+              ?>
+              <div id="myCarousel" class="carousel slide" data-ride="carousel" style="">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                  <?php
+                  for($i=0;$i<$count_slideshow;$i++){
+                    ?>
+                    <li data-target="#myCarousel" data-slide-to="<?= $i ?>" <?php if($i == 0) echo 'class="active"'; ?>></li>
+                    <?php
+                  }
+                  ?>
+                </ol>
+
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">
+                  <?php
+                  $numb = 0;
+                  while($row = $query_slideshow->fetch_array()){
+                    ?>
+                    <div class="item <?php if($numb == 0)echo "active"; ?>">
+                      <img src="admin/data/photos/<?= $row['gambar']; ?>" alt="Los Angeles">
+                    </div>
+                    <?php
+                    $numb++;
+                  }
+                  ?>
+                </div>
+
+                <!-- Left and right controls -->
+                <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                  <span class="glyphicon glyphicon-chevron-left"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                  <span class="glyphicon glyphicon-chevron-right"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </div>
+
+              <?php
+            }
+            ?>
+          </div>
+
             <!-- Start Single Category -->
             <?php
             while($row = $query_produk->fetch_array()){
               $no++;
               ?>
               <div class="col-md-4 col-lg-3 col-sm-4 col-xs-12">
-                <div class="category">
-                  <div class="ht__cat__thumb">
-                    <a href="index.php?page=produk-details&id=<?php echo $row['produk_id']?>">
-                      <img src="admin/data/photos/<?php echo $row['gambar'];?>" alt="product images"></div>
-                    </a>
-                  </div>
-                  <div class="fr__hover__info">
-                    <ul class="product__action">
-                      <li><a href="cart.html"><i class="icon-handbag icons"></i></a></li>
-                    </ul>
-                  </div>
-                  <div class="fr__product__inner">
-                    <h4><a href="index.php?page=produk-details"><?php echo $row['nama_produk'];?></a></h4>
-                    <ul class="fr__pro__prize">
-                      <li class="old__prize"><?php echo $row['harga'];?></li>
-                    </ul>
-                  </div>
+                <div class="col-md-12 item-product">
+                  <div class="category">
+                    <div class="ht__cat__thumb">
+                      <a href="index.php?page=produk-details&id=<?php echo $row['produk_id']?>">
+                        <img src="admin/data/photos/<?php echo $row['gambar'];?>" alt="product images"></div>
+                      </a>
+                    </div>
+                    <div class="fr__hover__info">
+                      <ul class="product__action">
+                        <li><a href="cart.html"><i class="icon-handbag icons"></i></a></li>
+                      </ul>
+                    </div>
+                    <div class="fr__product__inner card-body">
+                      <div class="old__prize">
+                        <a href="index.php?page=produk-details&id=<?php echo $row['produk_id']?>"><?php echo $row['nama_produk'];?></a>
+                      </div>
+                      <ul class="fr__pro__prize">
+                        <li class="old__prize">
+                          Rp. <?= number_format($row['harga'],2,',','.') ?>
+                        </li>
+                        <li></li>
+                      </ul>
+                      <ul>
+                        <li style="margin-top:10px;text-align:right;margin-bottom:20px">
+                          <?php
+                            if($isUserLogin){
+                            ?>
+                            <button type="button" class="btn btn-info" onclick="onButtonPesan('<?= str_replace('"', "+", json_encode($row)); ?>')">Pesan</button>
+                            <?php
+                            }
+                           ?>
+                        </li>
+                      </ul>
+                    </div>
+                </div>
                 </div>
               <?php } ?>
             </div>
@@ -129,21 +187,4 @@ if($query_produk){
     </div>
 
 </div>
-
-
 </div>
-<script src="js/vendor/jquery-3.2.1.min.js"></script>
-<!-- Bootstrap framework js -->
-<script src="js/bootstrap.min.js"></script>
-<!-- All js plugins included in this file. -->
-<script src="js/plugins.js"></script>
-<script src="js/slick.min.js"></script>
-<script src="js/owl.carousel.min.js"></script>
-<!-- Waypoints.min.js. -->
-<script src="js/waypoints.min.js"></script>
-<!-- Main js file that contents all jQuery plugins activation. -->
-<script src="js/main.js"></script><a id="scrollUp" href="#top" style="position: fixed; z-index: 2147483647; display: none;"><i class="zmdi zmdi-chevron-up"></i></a>
-
-
-
-</body></html>

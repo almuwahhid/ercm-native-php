@@ -1,6 +1,6 @@
 <?php
   $iddata=$_GET['id'];
-  $hasil=mysqli_query($h, "SELECT * from bahan where bahan_id = '$iddata'");
+  $hasil = mysqli_query($h, "SELECT * from bahan where bahan_id = '$iddata'");
   $row = mysqli_fetch_assoc($hasil);
 
   $id_supply = $row['supplier_id'];
