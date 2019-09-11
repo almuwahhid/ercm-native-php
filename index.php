@@ -1,7 +1,9 @@
 <?php
   session_start();
-  if (!isset($_SESSION['customers'])){
-    header("Location: login_user.php");
+  $isUserLogin = false;
+  if (isset($_SESSION['ercm_user'])){
+    // header("Location: login_user.php");
+    $isUserLogin = true;
   }
   include "koneksi.php";
 
@@ -66,7 +68,7 @@
                             <div class="col-md-7 col-lg-8 col-sm-5 col-xs-3">
                                 <nav class="main__menu__nav hidden-xs hidden-sm">
                                     <ul class="main__menu">
-                                        <li class="drop"><a href="index.html">Daftar Produk</a></li>
+                                        <li class="drop"><a href="index.php">Daftar Produk</a></li>
 
 
                                         <li class="drop"><a href="#">Product</a>
@@ -109,10 +111,19 @@
                                       <ul class="main__menu">
                                         <li class="drop"><a href="#" style="color: black;font-size: 20px;"><i class="icon-user icons"></i></a>
                                             <ul class="dropdown">
-                                                <li><a href="product-grid.html">Akun Saya</a></li>
-                                                <li><a href="product-details.html">Login</a></li>
-                                                <li><a href="product-details.html">Keranjang Saya</a></li>
-                                                <li><a href="product-details.html">Logout</a></li>
+                                              <?php
+                                              if($isUserLogin){
+                                                ?>
+                                                <li><a href="login.php">Akun Saya</a></li>
+                                                <li><a href="#">Keranjang Saya</a></li>
+                                                <li><a href="index.php?page=logout">Logout</a></li>
+                                                <?php
+                                              } else {
+                                                ?>
+                                                <li><a href="login.php">Login</a></li>
+                                                <?php
+                                              }
+                                               ?>
                                             </ul>
                                         </li>
                                       </ul>
@@ -210,238 +221,24 @@
 
         <!-- Start Category Area -->
         <section class="htc__category__area ptb--100">
+
             <div class="container">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="section__title--2 text-center">
-                            <h2 class="title__line">Daftar produk kami</h2>
+              <?php
+              if(isset($_GET['page'])){
+                if ($_GET['page']=="produkkami") {
+                  include 'user/produkkami.php';
+                }else if ($_GET['page']=="produk-details") {
+                    include 'user/produk-details.php';
+                }else if ($_GET['page']=="logout") {
+                    session_destroy();
+                    echo "<meta http-equiv='refresh' content='0; url=index.php'>";
+                  }
+                }else{
+                  include 'user/produkkami.php';
+                }
+                ?>
 
-                        </div>
-                    </div>
-                </div>
-                <div class="htc__product__container">
-                    <div class="row">
-                        <div class="product__list clearfix mt--30" style="position: relative; height: 0px;">
-                            <!-- Start Single Category -->
-                            <div class="col-md-4 col-lg-3 col-sm-4 col-xs-12">
-                                <div class="category">
-                                    <div class="ht__cat__thumb">
-                                        <a href="product-details.html">
-                                            <img src="images/product/1.jpg" alt="product images">
-                                        </a>
-                                    </div>
-                                    <div class="fr__hover__info">
-                                        <ul class="product__action">
-
-
-                                            <li><a href="cart.html"><i class="icon-handbag icons"></i></a></li>
-
-
-                                        </ul>
-                                    </div>
-                                    <div class="fr__product__inner">
-                                        <h4><a href="product-details.html">Largest Water Pot</a></h4>
-                                        <ul class="fr__pro__prize">
-                                            <li class="old__prize">$30.3</li>
-                                            <li>$25.9</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Single Category -->
-                            <!-- Start Single Category -->
-                            <div class="col-md-4 col-lg-3 col-sm-4 col-xs-12">
-                                <div class="category">
-                                    <div class="ht__cat__thumb">
-                                        <a href="product-details.html">
-                                            <img src="images/product/2.jpg" alt="product images">
-                                        </a>
-                                    </div>
-                                    <div class="fr__hover__info">
-                                        <ul class="product__action">
-
-
-                                            <li><a href="cart.html"><i class="icon-handbag icons"></i></a></li>
-
-
-                                        </ul>
-                                    </div>
-                                    <div class="fr__product__inner">
-                                        <h4><a href="product-details.html">nemo enim ipsam</a></h4>
-                                        <ul class="fr__pro__prize">
-                                            <li class="old__prize">$30.3</li>
-                                            <li>$25.9</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Single Category -->
-                            <!-- Start Single Category -->
-                            <div class="col-md-4 col-lg-3 col-sm-4 col-xs-12">
-                                <div class="category">
-                                    <div class="ht__cat__thumb">
-                                        <a href="product-details.html">
-                                            <img src="images/product/3.jpg" alt="product images">
-                                        </a>
-                                    </div>
-                                    <div class="fr__hover__info">
-                                        <ul class="product__action">
-
-
-                                            <li><a href="cart.html"><i class="icon-handbag icons"></i></a></li>
-
-
-                                        </ul>
-                                    </div>
-                                    <div class="fr__product__inner">
-                                        <h4><a href="product-details.html">Chair collection</a></h4>
-                                        <ul class="fr__pro__prize">
-                                            <li class="old__prize">$30.3</li>
-                                            <li>$25.9</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Single Category -->
-                            <!-- Start Single Category -->
-                            <div class="col-md-4 col-lg-3 col-sm-4 col-xs-12">
-                                <div class="category">
-                                    <div class="ht__cat__thumb">
-                                        <a href="product-details.html">
-                                            <img src="images/product/4.jpg" alt="product images">
-                                        </a>
-                                    </div>
-                                    <div class="fr__hover__info">
-                                        <ul class="product__action">
-
-
-                                            <li><a href="cart.html"><i class="icon-handbag icons"></i></a></li>
-
-
-                                        </ul>
-                                    </div>
-                                    <div class="fr__product__inner">
-                                        <h4><a href="product-details.html">dummy Product name</a></h4>
-                                        <ul class="fr__pro__prize">
-                                            <li class="old__prize">$30.3</li>
-                                            <li>$25.9</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Single Category -->
-                            <!-- Start Single Category -->
-                            <div class="col-md-4 col-lg-3 col-sm-4 col-xs-12">
-                                <div class="category">
-                                    <div class="ht__cat__thumb">
-                                        <a href="product-details.html">
-                                            <img src="images/product/5.jpg" alt="product images">
-                                        </a>
-                                    </div>
-                                    <div class="fr__hover__info">
-                                        <ul class="product__action">
-
-
-                                            <li><a href="cart.html"><i class="icon-handbag icons"></i></a></li>
-
-
-                                        </ul>
-                                    </div>
-                                    <div class="fr__product__inner">
-                                        <h4><a href="product-details.html">donec ac tempus nrb</a></h4>
-                                        <ul class="fr__pro__prize">
-                                            <li class="old__prize">$30.3</li>
-                                            <li>$25.9</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Single Category -->
-                            <!-- Start Single Category -->
-                            <div class="col-md-4 col-lg-3 col-sm-4 col-xs-12">
-                                <div class="category">
-                                    <div class="ht__cat__thumb">
-                                        <a href="product-details.html">
-                                            <img src="images/product/6.jpg" alt="product images">
-                                        </a>
-                                    </div>
-                                    <div class="fr__hover__info">
-                                        <ul class="product__action">
-
-
-                                            <li><a href="cart.html"><i class="icon-handbag icons"></i></a></li>
-
-
-                                        </ul>
-                                    </div>
-                                    <div class="fr__product__inner">
-                                        <h4><a href="product-details.html">Product Title Here </a></h4>
-                                        <ul class="fr__pro__prize">
-                                            <li class="old__prize">$30.3</li>
-                                            <li>$25.9</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Single Category -->
-                            <!-- Start Single Category -->
-                            <div class="col-md-4 col-lg-3 col-sm-4 col-xs-12">
-                                <div class="category">
-                                    <div class="ht__cat__thumb">
-                                        <a href="product-details.html">
-                                            <img src="images/product/7.jpg" alt="product images">
-                                        </a>
-                                    </div>
-                                    <div class="fr__hover__info">
-                                        <ul class="product__action">
-
-
-                                            <li><a href="cart.html"><i class="icon-handbag icons"></i></a></li>
-
-
-                                        </ul>
-                                    </div>
-                                    <div class="fr__product__inner">
-                                        <h4><a href="product-details.html">Product Title Here </a></h4>
-                                        <ul class="fr__pro__prize">
-                                            <li class="old__prize">$30.3</li>
-                                            <li>$25.9</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Single Category -->
-                            <!-- Start Single Category -->
-                            <div class="col-md-4 col-lg-3 col-sm-4 col-xs-12">
-                                <div class="category">
-                                    <div class="ht__cat__thumb">
-                                        <a href="product-details.html">
-                                            <img src="images/product/8.jpg" alt="product images">
-                                        </a>
-                                    </div>
-                                    <div class="fr__hover__info">
-                                        <ul class="product__action">
-
-
-                                            <li><a href="cart.html"><i class="icon-handbag icons"></i></a></li>
-
-
-                                        </ul>
-                                    </div>
-                                    <div class="fr__product__inner">
-                                        <h4><a href="product-details.html">Product Title Here </a></h4>
-                                        <ul class="fr__pro__prize">
-                                            <li class="old__prize">$30.3</li>
-                                            <li>$25.9</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Single Category -->
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </section>
 
 
@@ -484,14 +281,16 @@
 
                         <!-- End Single Footer Widget -->
                         <!-- Start Single Footer Widget -->
+
                         <div class="col-md-2 col-sm-6 col-xs-12 xmt-40 smt-40">
+
                             <div class="footer">
                                 <h2 class="title__line--2">AKUN</h2>
                                 <div class="ft__inner">
                                     <ul class="ft__list">
                                         <li><a href="#">Akun Saya</a></li>
                                         <li><a href="cart.html">Keranjang Saya</a></li>
-                                        <li><a href="#">Logout</a></li>
+                                        <li><a href="index.php?page=logout">Logout</a></li>
 
 
                                     </ul>
@@ -534,6 +333,7 @@
         </footer>
         <!-- End Footer Style -->
     </div>
+
     <!-- Body main wrapper end -->
 
     <!-- Placed js at the end of the document so the pages load faster -->
