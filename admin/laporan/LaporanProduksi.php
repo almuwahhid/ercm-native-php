@@ -27,7 +27,7 @@
   $html = '<!DOCTYPE html>
   <html>
   <head>
-    <title>Laporan Order Produk</title>
+    <title>Laporan Produksi</title>
     <style type="text/css">
     #outtable{
       padding: 20px;
