@@ -1,3 +1,6 @@
+<?php
+$produk = mysqli_query($h, "SELECT * from purchase_bahan");
+?>
 <div class="dashboard-ecommerce" style="min-height:88vh">
 <div class="container-fluid dashboard-content ">
   <!-- ============================================================== -->
@@ -27,12 +30,25 @@
                         <td width="50"><b>Sampai Tanggal</b></td>
                         <td width="80"><input class="form-control" type="date" name="tanggal_akhir" size="16" />
                         </td>
-
+                      </tr>
+                      <tr>
+                        <td width="50"><b>Jumlah KBP</b></td>
+                        <td width="80">
+                          <select name="id" class="form-control">
+                                              <?php
+                                              while($prod = $produk->fetch_array()){
+                                                ?>
+                                                    <option value="<?= $prod['id'] ?>">
+                                                      <?= $prod['jml_kbp'] ?></option>
+                                                <?php
+                                                }
+                                                ?>
+                                            </select>
+                        </td>
                       </tr>
                     </table>
                     <div class="col-md-12" style="margin-top:20px">
                       <input class="btn btn-outline-info" type="submit" value="Cari Data" name="pencarian"/>
-                      <input class="btn btn-outline-danger" type="reset" value="Reset" />
                     </div>
                   </form>
                 </div>
@@ -50,6 +66,7 @@
       //menangkap nilai form
       $tanggal_awal=$_POST['tanggal_awal'];
       $tanggal_akhir=$_POST['tanggal_akhir'];
+      $id = $_POST['id'];
       if(empty($tanggal_awal) || empty($tanggal_akhir)){
         //jika data tanggal kosong
         ?>
@@ -61,12 +78,18 @@
       }else{
         ?><i><b>Informasi : </b> Hasil pencarian data berdasarkan periode Tanggal <b><?php echo parseTanggal($_POST['tanggal_awal'])?></b> s/d <b><?php echo parseTanggal($_POST['tanggal_akhir'])?></b></i>
         <?php
-        $query = mysqli_query($h, "SELECT * from purchase_bahan JOIN supplier ON purchase_bahan.supplier_id = supplier.supplier_id JOIN produksi ON purchase_bahan.no_produksi = produksi.no_produksi where tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'");
+        $query = mysqli_query($h, "SELECT * from purchase_bahan JOIN supplier ON purchase_bahan.supplier_id = supplier.supplier_id JOIN produksi ON purchase_bahan.no_produksi = produksi.no_produksi where purchase_bahan.id = '$id' AND tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'");
       }
       ?>
     </p>
     <div class="col-md-12">
-      <a href="#" class="btn btn-primary">Unduh Laporan</a>
+      <?php
+      if(mysqli_num_rows($query) > 0){
+        ?>
+        <a target="_blank" href="<?= 'laporan/LaporanPembelianBahan.php?first_date='.$tanggal_awal.'&last_date='.$tanggal_akhir.'&id='.$id ?>" class="btn btn-primary">Unduh Laporan</a>
+        <?php
+        }
+       ?>
     </div>
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
       <div class="card">
@@ -94,7 +117,7 @@
         <td class="text-center" style="width:20px"><?= $no ?></td>
         <td align="center" height="30"><?php echo parseTanggal($row['tanggal']); ?></td>
         <td align="center"><?php echo $row['jml_kbp']; ?></td>
-        <td align="center"><?php echo $row['biaya_bahan']; ?></td>
+        <td align="center"><?php echo 'Rp.'.number_format($row['biaya_bahan'],2,',','.');?></td>
         <td align="center"><?php echo $row['tanggal_selesai'];?></td>
         <td align="center"><?php echo $row['nama'];?></td>
       </tr>
