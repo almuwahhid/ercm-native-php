@@ -1,3 +1,6 @@
+<?php
+$produk = mysqli_query($h, "SELECT * from orderan");
+?>
 <div class="dashboard-ecommerce" style="min-height:88vh">
 <div class="container-fluid dashboard-content ">
   <!-- ============================================================== -->
@@ -27,12 +30,25 @@
                         <td width="50"><b>Sampai Tanggal</b></td>
                         <td width="80"><input class="form-control" type="date" name="tanggal_akhir" size="16" />
                         </td>
-
+                      </tr>
+                      <tr>
+                        <td width="50"><b>Tanggal</b></td>
+                        <td width="80">
+                          <select name="no_order" class="form-control">
+                                              <?php
+                                              while($prod = $produk->fetch_array()){
+                                                ?>
+                                                    <option value="<?= $prod['no_order'] ?>">
+                                                      <?= $prod['tanggal'] ?></option>
+                                                <?php
+                                                }
+                                                ?>
+                                            </select>
+                        </td>
                       </tr>
                     </table>
                     <div class="col-md-12" style="margin-top:20px">
                       <input class="btn btn-outline-info" type="submit" value="Cari Data" name="pencarian"/>
-                      <input class="btn btn-outline-danger" type="reset" value="Reset" />
                     </div>
                   </form>
                 </div>
@@ -50,6 +66,7 @@
       //menangkap nilai form
       $tanggal_awal=$_POST['tanggal_awal'];
       $tanggal_akhir=$_POST['tanggal_akhir'];
+      $no_order = $_POST['no_order'];
       if(empty($tanggal_awal) || empty($tanggal_akhir)){
         //jika data tanggal kosong
         ?>
@@ -66,7 +83,13 @@
       ?>
     </p>
     <div class="col-md-12">
-      <a href="#" class="btn btn-primary">Unduh Laporan</a>
+      <?php
+      if(mysqli_num_rows($query) > 0){
+        ?>
+        <a target="_blank" href="<?= 'laporan/LaporanOrderProduk.php?first_date='.$tanggal_awal.'&last_date='.$tanggal_akhir.'&no_order='.$no_order ?>" class="btn btn-primary">Unduh Laporan</a>
+        <?php
+        }
+       ?>
     </div>
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
       <div class="card">
@@ -94,7 +117,7 @@
         <td align="center"><?php echo $row['nama']; ?></td>
         <td align="center"><?php echo $row['deskripsi']; ?></td>
         <td align="center" height="30"><?php echo parseTanggal($row['tanggal']); ?></td>
-        <td align="center"><?php echo $row['total'];?></td>
+        <td align="center"><?php echo 'Rp.'.number_format($row['total'],2,',','.');?></td>
       </tr>
       <?php
     }
