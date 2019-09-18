@@ -9,17 +9,23 @@ if(isset($_GET["r"])){
   $query_purchase_bahan = mysqli_query($h, "SELECT * from purchase_bahan
                                     JOIN supplier ON purchase_bahan.supplier_id = supplier.supplier_id
                                     JOIN produksi ON purchase_bahan.no_produksi = produksi.no_produksi
+                                    JOIN bahan ON purchase_bahan.bahan_id = bahan.bahan_id
+                                    WHERE supplier.supplier_id = $account->supplier_id
                                     ORDER BY purchase_bahan.tanggal ASC LIMIT 5 OFFSET ".$limit);
 }else{
   if($banyak_data>1){
       $query_purchase_bahan = mysqli_query($h, "SELECT * from purchase_bahan
                                         JOIN supplier ON purchase_bahan.supplier_id = supplier.supplier_id
                                         JOIN produksi ON purchase_bahan.no_produksi = produksi.no_produksi
+                                        JOIN bahan ON purchase_bahan.bahan_id = bahan.bahan_id
+                                        WHERE supplier.supplier_id = $account->supplier_id
                                         ORDER BY purchase_bahan.tanggal ASC LIMIT 5");
     }else{
       $query_purchase_bahan = mysqli_query($h, "SELECT * from purchase_bahan
                                         JOIN supplier ON purchase_bahan.supplier_id = supplier.supplier_id
                                         JOIN produksi ON purchase_bahan.no_produksi = produksi.no_produksi
+                                        JOIN bahan ON purchase_bahan.bahan_id = bahan.bahan_id
+                                        WHERE supplier.supplier_id = $account->supplier_id
                                         ORDER BY purchase_bahan.tanggal ASC");
     }
 }
@@ -70,10 +76,10 @@ if($query_purchase_bahan){
                     <tr class="border-0">
                       <th class="border-0 centerHorizontal" style="width:20px">No</th>
                       <th class="border-0">Tanggal Pembelian Bahan</th>
+                      <th class="border-0">Bahan</th>
                       <th class="border-0">Jumlah KBP</th>
                       <th class="border-0">Biaya Bahan</th>
                       <th class="border-0">Tanggal Selesai Produksi</th>
-                      <th class="border-0">Nama Supplier</th>
                       <th class="border-0">Aksi</th>
                     </tr>
                   </thead>
@@ -88,7 +94,10 @@ if($query_purchase_bahan){
                           <?php echo $no;?>
                         </td>
                         <td>
-                          <?php echo $row['tanggal'];?>
+                          <?php echo parseTanggal($row['tanggal']);?>
+                        </td>
+                        <td>
+                          <?php echo $row['nama_bahan'];?>
                         </td>
                         <td>
                           <?php echo $row['jml_kbp'];?>
@@ -97,11 +106,9 @@ if($query_purchase_bahan){
                           <?php echo $row['biaya_bahan'];?>
                         </td>
                         <td>
-                          <?php echo $row['tanggal_selesai'];?>
+                          <?php echo parseTanggal($row['tanggal_selesai']);?>
                         </td>
-                        <td>
-                          <?php echo $row['nama'];?>
-                        </td>
+
                         <td>
                           <a href="index.php?page=editbelibahan&id=<?php echo $row['id']?>">
                             <i class="fas fa-edit"></i>

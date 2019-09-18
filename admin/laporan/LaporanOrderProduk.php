@@ -97,7 +97,7 @@ $h = $koneksi->connect();
     </table>
    </div>
    <div style="width:700px;text-align:center;margin-top:20px">
-     Persewaan Kendaraan, '.strftime("%d %B %Y").'
+     ERCM, '.strftime("%d %B %Y").'
      <br><br><br><br><br><br>
      Admin
    </div>
@@ -116,5 +116,4 @@ $h = $koneksi->connect();
 // $dompdf->stream(''.$namefile, array('Attachment'=>0));
 // $output = $dompdf->output();
 // file_put_contents('directory/'.$namefile, $output);
-?>
 ?>

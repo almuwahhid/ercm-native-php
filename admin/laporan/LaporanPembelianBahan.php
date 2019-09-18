@@ -1,20 +1,46 @@
 <?php
+  session_start();
   include "../../koneksi.php";
   include "../helper.php";
 
+  function helper($data, $data2){
+    if($data == $data2){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   $koneksi = new Koneksi();
   $h = $koneksi->connect();
+
+  if (!isset($_SESSION['super_user'])){
+    echo "<script>window.close();</script>";
+    // echo "string";
+  } else {
+    $account = json_decode($_SESSION['super_user']);
+  }
+
   require '../../vendor/autoload.php';
   use Spipu\Html2Pdf\Html2Pdf;
   if(isset($_GET['first_date'])){
     $tanggal_awal = $_GET['first_date'];
     $tanggal_akhir = $_GET['last_date'];
-    $id = $_GET['id'];
+    // $id = $_GET['id'];
   } else {
     echo "<script>window.close();</script>";
   }
 
-  $query = mysqli_query($h, "SELECT * from purchase_bahan JOIN supplier ON purchase_bahan.supplier_id = supplier.supplier_id JOIN produksi ON purchase_bahan.no_produksi = produksi.no_produksi where purchase_bahan.id = '$id' AND tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'");
+  if(helper(4, $account->id_level)){
+    $query = mysqli_query($h, "SELECT * from purchase_bahan
+      JOIN supplier ON purchase_bahan.supplier_id = supplier.supplier_id
+      JOIN produksi ON purchase_bahan.no_produksi = produksi.no_produksi
+      JOIN bahan ON purchase_bahan.supplier_id = supplier.supplier_id
+      where supplier.supplier_id = $account->supplier_id AND tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'");
+  } else {
+    $query = mysqli_query($h, "SELECT * from purchase_bahan JOIN supplier ON purchase_bahan.supplier_id = supplier.supplier_id JOIN produksi ON purchase_bahan.no_produksi = produksi.no_produksi where tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'");
+  }
+  // $query = mysqli_query($h, "SELECT * from purchase_bahan JOIN supplier ON purchase_bahan.supplier_id = supplier.supplier_id JOIN produksi ON purchase_bahan.no_produksi = produksi.no_produksi where tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'");
 
   // echo "SELECT * from produk where id = '$id'";
   setlocale(LC_ALL, "IND");
@@ -23,7 +49,7 @@
   // width:640px;
   // border-radius: 5px;
 
-  $data = mysqli_fetch_assoc(mysqli_query($h, "SELECT * from purchase_bahan where id = '$id'"));
+  // $data = mysqli_fetch_assoc(mysqli_query($h, "SELECT * from purchase_bahan where id = '$id'"));
   $html = '<!DOCTYPE html>
   <html>
   <head>
@@ -68,7 +94,7 @@
   </head>
   <body>
   	<div id="outtable">
-    <h3>Laporan Pembelian Bahan '.$data["jml_kbp"].'</h3>
+    <h3>Laporan Pembelian Bahan </h3>
     <hr>
     <br>
     Tanggal : '.parseTanggal($tanggal_awal).' s/d '.parseTanggal($tanggal_akhir).'<br><br>
@@ -76,11 +102,13 @@
   	  	<thead>
   	  		<tr>
             <th class="text-center" style="width:20px">No</th>
-            <th class="text-center">Tanggal Selesai Produksi</th>
+            <th class="text-center">Nama Bahan</th>
+            <th class="text-center">Nama Supplier</th>
+            <th class="text-center">Tanggal Pembelian</th>
             <th class="text-center">Jumlah KBP</th>
             <th class="text-center">Biaya Bahan</th>
             <th class="text-center">Tanggal Selesai Produksi</th>
-            <th class="text-center">Nama Supplier</th>
+
   	  		</tr>
   	  	</thead>
   	  	<tbody>';
@@ -89,18 +117,20 @@
           $no++;
           $html = $html.'<tr class="border-0">
             <td class="text-center" style="width:15px">'.$no.'</td>
+            <td align="center">'.$row['nama_bahan'].'</td>
+            <td align="center">'.$row['nama'].'</td>
             <td align="center" height="30">'.parseTanggal($row['tanggal']).'</td>
             <td align="center">'.$row['jml_kbp'].'</td>
             <td align="center">'.'Rp.'.number_format($row['biaya_bahan'],2,',','.').'</td>
-            <td align="center">'.$row['tanggal_selesai'].'</td>
-            <td align="center">'.$row['nama'].'</td>
+            <td align="center">'.parseTanggal($row['tanggal_selesai']).'</td>
+
           </tr>';
         }
   	  	$html = $html.'</tbody>
   	  </table>
   	 </div>
      <div style="width:700px;text-align:center;margin-top:20px">
-       Persewaan Kendaraan, '.strftime("%d %B %Y").'
+       ERCM, '.strftime("%d %B %Y").'
        <br><br><br><br><br><br>
        Admin
      </div>
@@ -118,5 +148,4 @@
 // $dompdf->stream(''.$namefile, array('Attachment'=>0));
 // $output = $dompdf->output();
 // file_put_contents('directory/'.$namefile, $output);
-?>
 ?>

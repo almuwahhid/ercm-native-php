@@ -31,7 +31,7 @@ $produk = mysqli_query($h, "SELECT * from purchase_bahan");
                         <td width="80"><input class="form-control" type="date" name="tanggal_akhir" size="16" />
                         </td>
                       </tr>
-                      <tr>
+                      <!-- <tr>
                         <td width="50"><b>Jumlah KBP</b></td>
                         <td width="80">
                           <select name="id" class="form-control">
@@ -45,7 +45,7 @@ $produk = mysqli_query($h, "SELECT * from purchase_bahan");
                                                 ?>
                                             </select>
                         </td>
-                      </tr>
+                      </tr> -->
                     </table>
                     <div class="col-md-12" style="margin-top:20px">
                       <input class="btn btn-outline-info" type="submit" value="Cari Data" name="pencarian"/>
@@ -66,7 +66,7 @@ $produk = mysqli_query($h, "SELECT * from purchase_bahan");
       //menangkap nilai form
       $tanggal_awal=$_POST['tanggal_awal'];
       $tanggal_akhir=$_POST['tanggal_akhir'];
-      $id = $_POST['id'];
+      // $id = $_POST['id'];
       if(empty($tanggal_awal) || empty($tanggal_akhir)){
         //jika data tanggal kosong
         ?>
@@ -78,7 +78,16 @@ $produk = mysqli_query($h, "SELECT * from purchase_bahan");
       }else{
         ?><i><b>Informasi : </b> Hasil pencarian data berdasarkan periode Tanggal <b><?php echo parseTanggal($_POST['tanggal_awal'])?></b> s/d <b><?php echo parseTanggal($_POST['tanggal_akhir'])?></b></i>
         <?php
-        $query = mysqli_query($h, "SELECT * from purchase_bahan JOIN supplier ON purchase_bahan.supplier_id = supplier.supplier_id JOIN produksi ON purchase_bahan.no_produksi = produksi.no_produksi where purchase_bahan.id = '$id' AND tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'");
+        if(helper(4, $account->id_level)){
+          $query = mysqli_query($h, "SELECT * from purchase_bahan
+                                    JOIN supplier ON purchase_bahan.supplier_id = supplier.supplier_id
+                                    JOIN produksi ON purchase_bahan.no_produksi = produksi.no_produksi
+                                    JOIN bahan ON purchase_bahan.supplier_id = supplier.supplier_id
+                                    where supplier.supplier_id = $account->supplier_id AND tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'");
+        } else {
+          $query = mysqli_query($h, "SELECT * from purchase_bahan JOIN supplier ON purchase_bahan.supplier_id = supplier.supplier_id JOIN produksi ON purchase_bahan.no_produksi = produksi.no_produksi where tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'");
+        }
+
       }
       ?>
     </p>
@@ -86,7 +95,7 @@ $produk = mysqli_query($h, "SELECT * from purchase_bahan");
       <?php
       if(mysqli_num_rows($query) > 0){
         ?>
-        <a target="_blank" href="<?= 'laporan/LaporanPembelianBahan.php?first_date='.$tanggal_awal.'&last_date='.$tanggal_akhir.'&id='.$id ?>" class="btn btn-primary">Unduh Laporan</a>
+        <a target="_blank" href="<?= 'laporan/LaporanPembelianBahan.php?first_date='.$tanggal_awal.'&last_date='.$tanggal_akhir ?>" class="btn btn-primary">Unduh Laporan</a>
         <?php
         }
        ?>
@@ -99,11 +108,15 @@ $produk = mysqli_query($h, "SELECT * from purchase_bahan");
               <thead class="bg-light">
                 <tr class="border-0">
                   <th class="text-center" style="width:20px">No</th>
+                  <th class="text-center">Nama Bahan</th>
                   <th class="text-center">Tanggal Pembelian Bahan</th>
+                  <th class="text-center">Nama Supplier</th>
                   <th class="text-center">Jumlah KBP</th>
                   <th class="text-center">Biaya Bahan</th>
                   <th class="text-center">Tanggal Selesai Produksi</th>
-                  <th class="text-center">Nama Supplier</th>
+                  <?php
+                  
+                  ?>
                 </tr>
                 </thead>
                 <tbody>
@@ -115,11 +128,12 @@ $produk = mysqli_query($h, "SELECT * from purchase_bahan");
       ?>
       <tr class="border-0">
         <td class="text-center" style="width:20px"><?= $no ?></td>
+        <td align="center"><?php echo $row['nama_bahan'];?></td>
         <td align="center" height="30"><?php echo parseTanggal($row['tanggal']); ?></td>
+        <td align="center"><?php echo $row['nama'];?></td>
         <td align="center"><?php echo $row['jml_kbp']; ?></td>
         <td align="center"><?php echo 'Rp.'.number_format($row['biaya_bahan'],2,',','.');?></td>
-        <td align="center"><?php echo $row['tanggal_selesai'];?></td>
-        <td align="center"><?php echo $row['nama'];?></td>
+        <td align="center"><?php echo parseTanggal($row['tanggal_selesai']);?></td>
       </tr>
       <?php
     }

@@ -3,7 +3,7 @@
   $row = mysqli_fetch_assoc($hasil);
 
   $id_supply = $row['supplier_id'];
-  $supply = mysqli_query($h, "SELECT * from supplier");
+  $supply = mysqli_query($h, "SELECT * from bahan");
 
   $id_produksi = $row['no_produksi'];
   $produksy = mysqli_query($h, "SELECT * from produksi");
@@ -61,29 +61,30 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="inputText3" class="col-form-label">Tanggal Selesai Produksi</label>
-                  <select name="supplier_id" class="form-control">
+                  <label for="inputText3" class="col-form-label">Pilih Tanggal Selesai Produksi</label>
+                  <select name="no_produksi" class="form-control">
                                       <?php
                                       while($pro = $produksy->fetch_array()){
                                         ?>
                                             <option value="<?= $pro['no_produksi'] ?>"
                                               <?php if($pro['no_produksi'] == $row['no_produksi']) echo "selected"; ?> >
-                                              <?= $pro['tanggal_selesai'] ?></option>
+                                              <?= parseTanggal($pro['tanggal_selesai']) ?></option>
                                         <?php
                                         }
                                         ?>
                                     </select>
                   </div>
 
+                <input name="supplier_id" type="hidden" value="<?= $account->supplier_id ?>" class="form-control">
                 <div class="form-group">
-                  <label for="inputText3" class="col-form-label">Nama Supplier</label>
-                  <select name="supplier_id" class="form-control">
+                  <label for="inputText3" class="col-form-label">Bahan</label>
+                  <select name="bahan_id" class="form-control">
                                       <?php
                                       while($sup = $supply->fetch_array()){
                                         ?>
-                                            <option value="<?= $sup['supplier_id'] ?>"
-                                              <?php if($sup['supplier_id'] == $row['supplier_id']) echo "selected"; ?> >
-                                              <?= $sup['nama'] ?></option>
+                                            <option value="<?= $sup['bahan_id'] ?>"
+                                              <?php if($sup['bahan_id'] == $row['bahan_id']) echo "selected"; ?> >
+                                              <?= $sup['nama_bahan'] ?></option>
                                         <?php
                                         }
                                         ?>
@@ -110,9 +111,10 @@
     $biaya_bahan = $_POST['biaya_bahan'];
     $no_produksi = $_POST['no_produksi'];
     $supplier_id = $_POST['supplier_id'];
+    $bahan_id = $_POST['bahan_id'];
 
-    $hasil= mysqli_query($h, "INSERT INTO purchase_bahan(tanggal, jml_kbp, biaya_bahan, no_produksi, supplier_id)
-                              values('$tanggal','$jml_kbp', '$biaya_bahan', '$no_produksi', '$supplier_id')");
+    $hasil= mysqli_query($h, "INSERT INTO purchase_bahan(tanggal, bahan_id, jml_kbp, biaya_bahan, no_produksi, supplier_id)
+                              values('$tanggal', '$bahan_id', '$jml_kbp', '$biaya_bahan', '$no_produksi', '$supplier_id')");
     if($hasil){
         echo "
         <script>
