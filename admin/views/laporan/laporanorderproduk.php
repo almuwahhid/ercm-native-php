@@ -31,21 +31,6 @@ $produk = mysqli_query($h, "SELECT * from orderan");
                         <td width="80"><input class="form-control" type="date" name="tanggal_akhir" size="16" />
                         </td>
                       </tr>
-                      <tr>
-                        <td width="50"><b>Tanggal</b></td>
-                        <td width="80">
-                          <select name="no_order" class="form-control">
-                                              <?php
-                                              while($prod = $produk->fetch_array()){
-                                                ?>
-                                                    <option value="<?= $prod['no_order'] ?>">
-                                                      <?= $prod['tanggal'] ?></option>
-                                                <?php
-                                                }
-                                                ?>
-                                            </select>
-                        </td>
-                      </tr>
                     </table>
                     <div class="col-md-12" style="margin-top:20px">
                       <input class="btn btn-outline-info" type="submit" value="Cari Data" name="pencarian"/>
@@ -66,7 +51,6 @@ $produk = mysqli_query($h, "SELECT * from orderan");
       //menangkap nilai form
       $tanggal_awal=$_POST['tanggal_awal'];
       $tanggal_akhir=$_POST['tanggal_akhir'];
-      $no_order = $_POST['no_order'];
       if(empty($tanggal_awal) || empty($tanggal_akhir)){
         //jika data tanggal kosong
         ?>
@@ -86,7 +70,7 @@ $produk = mysqli_query($h, "SELECT * from orderan");
       <?php
       if(mysqli_num_rows($query) > 0){
         ?>
-        <a target="_blank" href="<?= 'laporan/LaporanOrderProduk.php?first_date='.$tanggal_awal.'&last_date='.$tanggal_akhir.'&no_order='.$no_order ?>" class="btn btn-primary">Unduh Laporan</a>
+        <a target="_blank" href="<?= 'laporan/LaporanOrderProduk.php?first_date='.$tanggal_awal.'&last_date='.$tanggal_akhir ?>" class="btn btn-primary">Unduh Laporan</a>
         <?php
         }
        ?>
@@ -99,10 +83,14 @@ $produk = mysqli_query($h, "SELECT * from orderan");
               <thead class="bg-light">
                 <tr class="border-0">
                   <th class="text-center" style="width:20px">No</th>
-                  <th class="text-center">Nama Customers</th>
-                  <th class="text-center">Deskripsi</th>
+                  <th class="text-center">Nama Customer</th>
                   <th class="text-center">Tanggal</th>
+                  <th class="text-center">Produk</th>
+                  <th class="text-center">Harga</th>
+                  <th class="text-center">Jumlah</th>
+                  <th class="text-center">Subtotal</th>
                   <th class="text-center">Total</th>
+                  <th class="text-center">Total Laba</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -111,13 +99,65 @@ $produk = mysqli_query($h, "SELECT * from orderan");
     $no = 0;
     while($row = $query->fetch_array()){
       $no++;
+      $id_detail_order = $row['no_order'];
+      $query_order_detail = mysqli_query($h, "SELECT * from order_detail
+                                        JOIN orderan ON order_detail.no_order = orderan.no_order
+                                        JOIN produk ON order_detail.produk_id = produk.produk_id
+                                        WHERE orderan.no_order = '$id_detail_order'
+                                        ORDER BY order_detail.hrg_jual ASC");
+     $query_order_detail2 = mysqli_query($h, "SELECT * from order_detail
+                                  JOIN orderan ON order_detail.no_order = orderan.no_order
+                                  JOIN produk ON order_detail.produk_id = produk.produk_id
+                                  WHERE orderan.no_order = '$id_detail_order'
+                                  ORDER BY order_detail.hrg_jual ASC");
+      $total = 0;
+      $totalLaba = 0;
+      while($rows = $query_order_detail->fetch_array()){
+          $total += $rows['subtotal'];
+          $totalLaba += ($rows['laba'] * $rows['jumlah']);
+      }
+      $jumlah = mysqli_num_rows(mysqli_query($h, "SELECT * from order_detail
+                                        JOIN orderan ON order_detail.no_order = orderan.no_order
+                                        JOIN produk ON order_detail.produk_id = produk.produk_id
+                                        WHERE orderan.no_order = '$id_detail_order'
+                                        ORDER BY order_detail.hrg_jual ASC"));
+      $kolom = 0;
+      while($rows = $query_order_detail2->fetch_array()){
+        echo '<tr class="border-0">';
+        if($kolom == 0){
+          ?>
+          <td rowspan="<?= $jumlah ?>" class="text-center" style="width:20px"><?= $no ?></td>
+          <td rowspan="<?= $jumlah ?>" align="center"><?php echo $row['nama']; ?></td>
+          <td rowspan="<?= $jumlah ?>" align="center" height="30"><?php echo parseTanggal($row['tanggal']); ?></td>
+          <?php
+        }
+          ?>
+          <td class="text-center">
+            <?php echo $rows['nama_produk'];?>
+          </td>
+          <td class="text-center">
+            Rp. <?= number_format($rows['hrg_jual'],2,',','.')?>
+          </td>
+          <td class="text-center">
+            <?php echo $rows['jumlah'];?>
+          </td>
+          <td class="text-center">
+            Rp. <?= number_format($rows['subtotal'],2,',','.')?>
+          </td>
+          <?php
+          if($kolom == 0){
+            $kolom = 1;
+            ?>
+            <td rowspan="<?= $jumlah ?>" class="text-center">
+              Rp. <?= number_format($total,2,',','.')?>
+            </td>
+            <td rowspan="<?= $jumlah ?>" class="text-center">
+              Rp. <?= number_format($totalLaba,2,',','.')?>
+            </td>
+            <?php
+          }
+      }
       ?>
-      <tr class="border-0">
-        <td class="text-center" style="width:20px"><?= $no ?></td>
-        <td align="center"><?php echo $row['nama']; ?></td>
-        <td align="center"><?php echo $row['deskripsi']; ?></td>
-        <td align="center" height="30"><?php echo parseTanggal($row['tanggal']); ?></td>
-        <td align="center"><?php echo 'Rp.'.number_format($row['total'],2,',','.');?></td>
       </tr>
       <?php
     }

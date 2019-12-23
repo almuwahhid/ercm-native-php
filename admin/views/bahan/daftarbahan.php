@@ -65,11 +65,11 @@ if($query_bahan){
                 <table class="table">
                   <thead class="bg-light">
                     <tr class="border-0">
-                      <th class="border-0 centerHorizontal" style="width:20px">No</th>
-                      <th class="border-0">Nama Bahan</th>
-                      <th class="border-0">Satuan</th>
-                      <th class="border-0">Harga</th>
-                      <th class="border-0">Nama Supplier</th>
+                      <th class="border-0 centerHorizontal text-center" style="width:20px">No</th>
+                      <th class="border-0 text-center">Nama Bahan</th>
+                      <th class="border-0 text-center">Satuan</th>
+                      <th class="border-0 text-center">Harga</th>
+                      <th class="border-0 text-center">Nama Supplier</th>
                       <?php
                       if(helper(3, $account->id_level)){
                        ?>
@@ -86,19 +86,19 @@ if($query_bahan){
                       ?>
 
                       <tr>
-                        <td class="centerHorizontal">
+                        <td class="centerHorizontal text-center">
                           <?php echo $no;?>
                         </td>
-                        <td>
+                        <td class="text-center">
                           <?php echo $row['nama_bahan'];?>
                         </td>
-                        <td>
+                        <td class="text-center">
                           <?php echo $row['satuan'];?>
                         </td>
-                        <td>
-                          <?php echo $row['harga'];?>
+                        <td class="text-center">
+                          Rp. <?= number_format($row['harga'],2,',','.')  ?>
                         </td>
-                        <td>
+                        <td class="text-center">
                           <?php echo $row['nama'];?>
                         </td>
                         <?php

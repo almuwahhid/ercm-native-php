@@ -45,12 +45,18 @@
         text-align: center;
         border-right: 1px solid #e3e3e3;
         padding: 10px;
+        display: inline-block;
+        vertical-align: middle;
+        line-height: normal;
       }
       tbody td{
         text-align:center;
         border-top: 1px solid #e3e3e3;
         border-right: 1px solid #e3e3e3;
         padding: 10px;
+        display: inline-block;
+        vertical-align: middle;
+        line-height: normal;
       }
       tbody tr:nth-child(even){
         background: #F6F5FA;
@@ -75,37 +81,81 @@
   	  <table>
   	  	<thead>
   	  		<tr>
-            <th class="text-center" style="width:20px">No</th>
-            <th class="text-center">Tanggal Selesai Produksi</th>
-            <th class="text-center">Nama Produk</th>
-            <th class="text-center">Jumlah Produksi</th>
-            <th class="text-center">Biaya Bahan</th>
-            <th class="text-center">Biaya tkl</th>
-            <th class="text-center">Biaya produksi</th>
+            <th align="center" style="width:10px">No</th>
+            <th align="center">Tgl Selesai Produksi</th>
+            <th align="center">Nama Produk</th>
+            <th align="center">Jumlah <br> Produksi</th>
+            <th align="center">Biaya tkl</th>
+            <th align="center">Biaya Bahan</th>
+            <th align="center">Biaya produksi</th>
   	  		</tr>
   	  	</thead>
   	  	<tbody>';
         $no = 0;
+        $totalbiayabahan = 0;
+        $totalbiayaproduksi = 0;
+        $totalbiayaproduksi = 0;
+        $totalbiayatkl = 0;
         while($row = $query->fetch_array()){
           $no++;
+          $biayabahan = 0;
+          $iddata = $row['no_produksi'];
+          $databahan2 = mysqli_query($h, "SELECT * from bahan_produksi
+              JOIN bahan ON bahan.bahan_id = bahan_produksi.id_bahan
+              where id_produksi = '$iddata'");
+          $jumlah_bahan = mysqli_num_rows(mysqli_query($h, "SELECT * from bahan_produksi WHERE id_produksi = ".$iddata));
+
+          if($jumlah_bahan > 0){
+            while($rows = $databahan2->fetch_array()){
+                $biayabahan = $biayabahan+$rows['biaya'];
+            }
+          }
+          $biayabahan = $biayabahan*$row['jml_produksi'];
+          $biayaproduksi = ($biayabahan+$row['biaya_tkl']);
+
+          $totalbiayabahan += $biayabahan;
+          $totalbiayaproduksi += $biayaproduksi;
+          $totalbiayatkl += $row['biaya_tkl'];
+
           $html = $html.'<tr class="border-0">
-            <td class="text-center" style="width:15px">'.$no.'</td>
-            <td align="center" height="30">'.parseTanggal($row['tanggal_selesai']).'</td>
+            <td align="center" style="width:10px;height:15px">'.$no.'</td>
+            <td align="center">'.parseTanggal($row['tanggal_selesai']).'</td>
             <td align="center">'.$row['nama_produk'].'</td>
             <td align="center">'.$row['jml_produksi'].'</td>
-            <td align="center">'.'Rp.'.number_format($row['biaya_bahan'],2,',','.').'</td>
             <td align="center">'.'Rp.'.number_format($row['biaya_tkl'],2,',','.').'</td>
-            <td align="center">'.'Rp.'.number_format($row['biaya_produksi'],2,',','.').'</td>
+            <td align="center">'.'Rp.'.number_format($biayabahan,2,',','.').'</td>
+            <td align="center">'.'Rp.'.number_format($biayaproduksi,2,',','.').'</td>
           </tr>';
         }
-  	  	$html = $html.'</tbody>
+  	  	$html = $html.'
+        <tr>
+          <td align="right" colspan="5"><b>Total Biaya TKL &nbsp;</b></td>
+          <td align="left" colspan="2">Rp.'.number_format($totalbiayatkl,2,',','.').'</td>
+        </tr>
+        <tr>
+          <td align="right" colspan="5"><b>Total Biaya Bahan &nbsp;</b></td>
+          <td align="left" colspan="2">Rp.'.number_format($totalbiayabahan,2,',','.').'</td>
+        </tr>
+        <tr>
+          <td align="right" colspan="5"><b>Total Biaya Produksi &nbsp;</b></td>
+          <td align="left" colspan="2">Rp.'.number_format($totalbiayaproduksi,2,',','.').'</td>
+        </tr>
+        </tbody>
   	  </table>
   	 </div>
-     <div style="width:700px;text-align:center;margin-top:20px">
-       ERCM, '.strftime("%d %B %Y").'
-       <br><br><br><br><br><br>
-       Admin
-     </div>
+     <table style="border:0px">
+      <tr>
+        <td style=width:450px>
+        </td>
+        <td style="width:30%">
+        <div style="width:300px;text-align:center;margin-top:20px">
+          ERCM, '.strftime("%d %B %Y").'
+          <br><br><br><br><br><br>
+          Admin
+        </div>
+        </td>
+      </tr>
+     </table>
   </body>
   </html>';
 

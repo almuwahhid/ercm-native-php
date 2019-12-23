@@ -54,9 +54,9 @@
 
       if($isNew){
         $produk_id = $produk->produk_id;
-        $produk_harga = $produk->harga;
+        $produk_harga = ($produk->harga+$produk->laba);
         $noorder = $data['no_order'];
-        $subtotal = $jumlah_produk * $produk->harga;
+        $subtotal = $jumlah_produk * $produk_harga;
         $t_query = mysqli_query($h, "INSERT INTO order_detail(no_order, produk_id, hrg_jual, jumlah, subtotal)
                   values('$noorder','$produk_id', '$produk_harga', '$jumlah_produk', '$subtotal')");
 
@@ -77,7 +77,7 @@
         }
 
       } else {
-        $subtotal = $jumlah_produk*$produk->harga;
+        $subtotal = $jumlah_produk * ($produk->harga+$produk->laba);
         $t_query = mysqli_query($h, "UPDATE order_detail SET jumlah = '".$jumlah_produk."', subtotal = '".$subtotal."' WHERE no_det= ".$old_detail['no_det']);
         if($t_query){
           echo "

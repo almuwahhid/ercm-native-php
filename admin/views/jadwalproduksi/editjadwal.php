@@ -22,8 +22,8 @@
           <div class="page-breadcrumb">
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.php" class="breadcrumb-link">Jadwal Produksi</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><?php echo $row["tanggal"];  ?></li>
+                <li class="breadcrumb-item"><a href="index.php?page=daftarjadwal" class="breadcrumb-link">Jadwal Produksi</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><?php echo parseTanggal($row["tanggal"]);  ?></li>
               </ol>
             </nav>
           </div>

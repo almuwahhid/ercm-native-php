@@ -1,13 +1,10 @@
 <?php
   $iddata=$_GET['id'];
-  $hasil=mysqli_query($h, "SELECT * from purchase_bahan where id = '$iddata'");
+  $hasil = mysqli_query($h, "SELECT * from purchase_bahan
+                            JOIN bahan ON purchase_bahan.bahan_id = bahan.bahan_id
+                            JOIN supplier ON bahan.supplier_id = supplier.supplier_id
+                            where id = '$iddata'");
   $row = mysqli_fetch_assoc($hasil);
-
-  $id_supply = $row['supplier_id'];
-  $supply = mysqli_query($h, "SELECT * from supplier");
-
-  $id_produksi = $row['no_produksi'];
-  $produksy = mysqli_query($h, "SELECT * from produksi");
 ?>
 
 
@@ -48,50 +45,16 @@
             <h5 class="card-header">Masukkan seluruh data dengan benar!</h5>
             <div class="card-body">
               <form action="" method="post" enctype="multipart/form-data">
-                <input name="id" type="hidden" class="form-control" value="<?php echo $row['id'];  ?>">
+                <input name="id" type="hidden" class="form-control" value="<?php echo $iddata;  ?>">
+                <input name="harga" type="hidden" class="form-control" value="<?php echo $row['harga'];  ?>">
                 <div class="form-group">
-                  <label for="inputText3" class="col-form-label">Tanggal Pembelian Bahan</label>
-                  <input required name="tanggal" id="inputText3" type="date" class="form-control" value="<?php echo $row['tanggal'];  ?>">
+                  <label for="inputText3" class="col-form-label">Nama Bahan</label>
+                  <input disabled name="bahan" class="form-control" value="<?php echo $row['nama_bahan'];  ?>">
                 </div>
                 <div class="form-group">
-                  <label for="inputText3" class="col-form-label">Jumlah KBP</label>
+                  <label for="inputText3" class="col-form-label">Jumlah Pembelian</label>
                   <input required name="jml_kbp" type="number" class="form-control" value="<?php echo $row['jml_kbp'];  ?>">
                 </div>
-                <div class="form-group">
-                  <label for="inputText3" class="col-form-label">Biaya Bahan</label>
-                  <input required name="biaya_bahan" type="number" step="any" class="form-control" value="<?php echo $row['biaya_bahan'];  ?>" />
-                </div>
-
-                <div class="form-group">
-                  <label for="inputText3" class="col-form-label">Pilih Tanggal Selesai Produksi</label>
-                  <select name="no_produksi" class="form-control">
-                                      <?php
-                                      while($pro = $produksy->fetch_array()){
-                                        ?>
-                                            <option value="<?= $pro['no_produksi'] ?>"
-                                              <?php if($pro['no_produksi'] == $row['no_produksi']) echo "selected"; ?> >
-                                              <?= parseTanggal($pro['tanggal_selesai']) ?></option>
-                                        <?php
-                                        }
-                                        ?>
-                                    </select>
-                  </div>
-                  <input name="supplier_id" type="hidden" value="<?= $account->supplier_id ?>" class="form-control">
-                  <div class="form-group">
-                    <label for="inputText3" class="col-form-label">Bahan</label>
-                    <select name="bahan_id" class="form-control">
-                                        <?php
-                                        while($sup = $supply->fetch_array()){
-                                          ?>
-                                              <option value="<?= $sup['bahan_id'] ?>"
-                                                <?php if($sup['bahan_id'] == $row['bahan_id']) echo "selected"; ?> >
-                                                <?= $sup['nama_bahan'] ?></option>
-                                          <?php
-                                          }
-                                          ?>
-                                      </select>
-                    </div>
-
                 <div class="custom-file mb-3">
                   <input type="submit" href="#" class="col-xl-4 centerHorizontal btn btn-primary" value="Ubah"></a>
                 </div>
@@ -107,17 +70,12 @@
 
 
 <?php
-  if(isset($_POST['tanggal'])){
+  if(isset($_POST['jml_kbp'])){
     $id = $_POST['id'];
-    $tanggal = $_POST['tanggal'];
+    $harga = $_POST['harga'];
     $jml_kbp = $_POST['jml_kbp'];
-    $biaya_bahan = $_POST['biaya_bahan'];
-    $no_produksi = $_POST['no_produksi'];
-    $bahan_id = $_POST['bahan_id'];
-
-
-      $hasil = mysqli_query($h, "UPDATE purchase_bahan SET tanggal = '".$tanggal."', jml_kbp = '".$jml_kbp."', biaya_bahan = '".$biaya_bahan."', no_produksi = '".$no_produksi."', bahan_id = '".$bahan_id."' WHERE id= ".$id);
-
+    $biaya_bahan = $harga*$jml_kbp;
+    $hasil = mysqli_query($h, "UPDATE purchase_bahan SET jml_kbp = '".$jml_kbp."', biaya_bahan = '".$biaya_bahan."' WHERE id= ".$id);
     if($hasil){
         echo "
         <script>

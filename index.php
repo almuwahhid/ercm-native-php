@@ -142,11 +142,7 @@
                   if($isUserLogin){
                     ?>
                     <div class="htc__shopping__cart">
-
-
-
                       <a class="cart__menu" href="#"><i class="icon-handbag icons"></i></a>
-
                       <?php
                       if($isUserLogin && $hasil > 0){
                         $total_order = mysqli_num_rows(mysqli_query($h, $query_detailorder));
@@ -312,7 +308,7 @@
                     </div>
                     <div class="shp__pro__details">
                       <h2><a href="#"><?= $row['nama_produk'] ?></a></h2>
-                      <span class="quantity">Jumlah : <?= $row['jumlah'] ?></span>
+                      <span class="quantity">Jumlah : <?= $row['jumlah'] ?> x <?= ($row['harga']+$row['laba']) ?></span>
                       <span class="shp__price">Rp. <?= number_format($row['subtotal'],2,',','.') ?></span>
                     </div>
                     <div class="remove__btn">
@@ -472,7 +468,8 @@
         07 A. Pesan barang area
     --------------------------------------*/
       function onButtonPesan(data){
-        var barang = JSON.parse(data.split('+').join('"'));
+        var realdata = data.split('\/').join('/');
+        var barang = JSON.parse(realdata.split('+').join('"'));
         // console.log("hii "+data.replace(/+/g, '"'));
 
         console.log("hii "+data.split('+').join('"'));

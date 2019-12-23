@@ -1,6 +1,6 @@
 <?php
 $jumlah = mysqli_num_rows(mysqli_query($h, "SELECT * from orderan"));
-$banyak_data = floor($jumlah/5)+1;
+$banyak_data = floor($jumlah/5);
 $limit = 0;
 if(isset($_GET["r"])){
   $active_list = $_GET["r"];
@@ -38,7 +38,7 @@ if($query_orderan){
           <div class="page-breadcrumb">
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.php?page=daftarorder" class="breadcrumb-link">Order</a></li>
+                <li class="breadcrumb-item"><a href="index.php?page=daftarorder" class="breadcrumb-link">Home</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Daftar Order</li>
               </ol>
             </nav>
@@ -65,10 +65,10 @@ if($query_orderan){
                 <table class="table">
                   <thead class="bg-light">
                     <tr class="border-0">
-                      <th class="border-0 centerHorizontal" style="width:20px">No</th>
-                      <th class="border-0">Nama Customers</th>
-                      <th class="border-0">Tanggal Order</th>
-                      <th class="border-0">Aksi</th>
+                      <th class="border-0 text-center" style="width:20px">No</th>
+                      <th class="border-0 text-center">Nama Customers</th>
+                      <th class="border-0 text-center">Tanggal Order</th>
+                      <th class="border-0 text-center">Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -78,17 +78,16 @@ if($query_orderan){
                       ?>
 
                       <tr>
-                        <td class="centerHorizontal">
+                        <td class="text-center">
                           <?php echo $no;?>
                         </td>
-                        <td>
+                        <td class="text-center">
                           <?php echo $row['nama'];?>
                         </td>
-                        <td>
-                          <?php echo $row['tanggal'];?>
+                        <td class="text-center">
+                          <?php echo parseTanggal($row['tanggal']);?>
                         </td>
-
-                        <td>
+                        <td class="text-center">
                           <a href="index.php?page=detailorder&id=<?php echo $row['no_order']?>">
                             <i class="fas fa-search"></i>
                           </a>
@@ -111,13 +110,13 @@ if($query_orderan){
                           if($active_list==$i){
                             echo '<li class="page-item active"><a class="page-link">'.$i.'</a></li>';
                           }else{
-                            echo "<li class='page-item'><a class='page-link' href='?r=".$i."'>".$i."</a></li>";
+                            echo "<li class='page-item'><a class='page-link' href='?page=daftarorder&r=".$i."'>".$i."</a></li>";
                           }
                         }else{
                           if($i==1){
                             echo '<li class="active page-item"><a class="page-link">'.$i.'</a></li>';
                           }else{
-                            echo "<li class='page-item'><a class='page-link' href='?r=".$i."'>".$i."</a></li>";
+                            echo "<li class='page-item'><a class='page-link' href='?page=daftarorder&r=".$i."'>".$i."</a></li>";
                           }
                         }
                       }

@@ -1,28 +1,13 @@
   <?php
   $jumlah = mysqli_num_rows(mysqli_query($h, "SELECT * from order_detail"));
-  $banyak_data = floor($jumlah/5)+1;
+  $banyak_data = floor($jumlah/5);
   $limit = 0;
-  if(isset($_GET["r"])){
-    $active_list = $_GET["r"];
-    $first = ($_GET["r"]*5);
-    $limit = $first-5;
-    $query_order_detail = mysqli_query($h, "SELECT * from order_detail
-                                      JOIN orderan ON order_detail.no_order = orderan.no_order
-                                      JOIN produk ON order_detail.produk_id = produk.produk_id
-                                      ORDER BY order_detail.hrg_jual ASC LIMIT 5 OFFSET ".$limit);
-  }else{
-    if($banyak_data>1){
-        $query_order_detail = mysqli_query($h, "SELECT * from order_detail
-                                          JOIN orderan ON order_detail.no_order = orderan.no_order
-                                          JOIN produk ON order_detail.produk_id = produk.produk_id
-                                          ORDER BY order_detail.hrg_jual ASC LIMIT 5");
-      }else{
-        $query_order_detail = mysqli_query($h, "SELECT * from order_detail
-                                          JOIN orderan ON order_detail.no_order = orderan.no_order
-                                          JOIN produk ON order_detail.produk_id = produk.produk_id
-                                          ORDER BY order_detail.hrg_jual ASC");
-      }
-  }
+  $id_detail_order = $_GET['id'];
+  $query_order_detail = mysqli_query($h, "SELECT * from order_detail
+                                    JOIN orderan ON order_detail.no_order = orderan.no_order
+                                    JOIN produk ON order_detail.produk_id = produk.produk_id
+                                    WHERE orderan.no_order = '$id_detail_order'
+                                    ORDER BY order_detail.hrg_jual ASC");
   if($query_order_detail){
   	$no = $limit;
   }
@@ -68,80 +53,72 @@
                   <table class="table">
                     <thead class="bg-light">
                       <tr class="border-0">
-                        <th class="border-0 centerHorizontal" style="width:20px">No</th>
-                        <th class="border-0">Nama Produk</th>
-                        <th class="border-0">Tanggal Order</th>
-                        <th class="border-0">Deskripsi</th>
-                        <th class="border-0">Jumlah</th>
-                        <th class="border-0">Harga Jual</th>
-                        <th class="border-0">Subtotal</th>
-                        <th class="border-0">Total</th>
+                        <th class="border-0 text-center" style="width:20px">No</th>
+                        <th class="border-0 text-center">Nama Produk</th>
+                        <th class="border-0 text-center">Tanggal Order</th>
+                        <th class="border-0 text-center">Jumlah</th>
+                        <th class="border-0 text-center">Harga Jual</th>
+                        <th class="border-0 text-center">Subtotal</th>
+                        <th class="border-0 text-center">Keuntungan</th>
                       </tr>
                     </thead>
                     <tbody>
                       <?php
+                      $total = 0;
+                      $jumlah_keuntungan = 0;
                       while($row = $query_order_detail->fetch_array()){
                         $no++;
+                        $total += $row['subtotal'];
                         ?>
 
                         <tr>
-                          <td class="centerHorizontal">
+                          <td class="text-center">
                             <?php echo $no;?>
                           </td>
-                          <td>
+                          <td class="text-center">
                             <?php echo $row['nama_produk'];?>
                           </td>
-                          <td>
-                            <?php echo $row['tanggal'];?>
+                          <td class="text-center">
+                            <?php echo parseTanggal($row['tanggal']);?>
                           </td>
-                          <td>
-                            <?php echo $row['deskripsi'];?>
-                          </td>
-                          <td>
+                          <td class="text-center">
                             <?php echo $row['jumlah'];?>
                           </td>
-                          <td>
-                            <?php echo $row['hrg_jual'];?>
+                          <td class="text-center">
+                            Rp. <?= number_format($row['hrg_jual'],2,',','.')?>
                           </td>
-
-                          <td>
-                            <?php echo $row['subtotal'];?>
+                          <td class="text-center">
+                            Rp. <?= number_format($row['subtotal'],2,',','.')?>
                           </td>
-                          <td>
-                            <?php echo $row['total'];?>
+                          <td class="text-center">
+                            <?php
+                            $keuntungan = ($row['laba'] * $row['jumlah']);?>
+                            Rp. <?= number_format($keuntungan,2,',','.')?>
                           </td>
                         </tr>
 
                         <?php
+                        $jumlah_keuntungan += $keuntungan;
                       }
                       ?>
+                      <tr>
+                        <th colspan="6" class="text-right">
+                          Total :
+                        </th>
+                        <th class="text-center">
+                          Rp. <?= number_format($total,2,',','.')?>
+                        </th>
+                      </tr>
+                      <tr>
+                        <th colspan="6" class="text-right">
+                          Total Keuntungan :
+                        </th>
+                        <th class="text-center">
+                          Rp. <?= number_format($jumlah_keuntungan,2,',','.')?>
+                        </th>
+                      </tr>
                     </tbody>
                   </table>
-                </div>
-                <div class="col-md-12">
-                  <nav aria-label="Page navigation">
-                    <ul class="pagination">
-                      <?php
-                      if($banyak_data>1){
-                        for($i=1;$i<=$banyak_data;$i++){
-                          if(isset($active_list)){
-                            if($active_list==$i){
-                              echo '<li class="page-item active"><a class="page-link">'.$i.'</a></li>';
-                            }else{
-                              echo "<li class='page-item'><a class='page-link' href='?r=".$i."'>".$i."</a></li>";
-                            }
-                          }else{
-                            if($i==1){
-                              echo '<li class="active page-item"><a class="page-link">'.$i.'</a></li>';
-                            }else{
-                              echo "<li class='page-item'><a class='page-link' href='?r=".$i."'>".$i."</a></li>";
-                            }
-                          }
-                        }
-                      }
-                      ?>
-                    </ul>
-                  </nav>
                 </div>
               </div>
             </div>

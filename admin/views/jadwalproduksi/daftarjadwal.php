@@ -66,10 +66,10 @@ if($query_produksi_jadwal){
                   <thead class="bg-light">
                     <tr class="border-0">
                       <th class="border-0 centerHorizontal" style="width:20px">No</th>
-                      <th class="border-0">Tanggal Produksi</th>
-                      <th class="border-0">Kapasitas Produksi</th>
-                      <th class="border-0">Tanggal Selesai Produksi</th>
-                      <th class="border-0">Aksi</th>
+                      <th class="border-0 text-center">Tanggal Produksi</th>
+                      <th class="border-0 text-center">Kapasitas Produksi</th>
+                      <th class="border-0 text-center">Tanggal Selesai Produksi</th>
+                      <th class="border-0 text-center">Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -82,16 +82,16 @@ if($query_produksi_jadwal){
                         <td class="centerHorizontal">
                           <?php echo $no;?>
                         </td>
-                        <td>
-                          <?php echo $row['tanggal'];?>
+                        <td class="text-center">
+                          <?php echo parseTanggal($row['tanggal']);?>
                         </td>
-                        <td>
+                        <td class="text-center">
                           <?php echo $row['kapasitas_produksi'];?>
                         </td>
-                        <td>
-                          <?php echo $row['tanggal_selesai'];?>
+                        <td class="text-center">
+                          <?php echo parseTanggal($row['tanggal_selesai']);?>
                         </td>
-                        <td>
+                        <td class="text-center">
                           <a href="index.php?page=editjadwal&id=<?php echo $row['jadwal_id']?>">
                             <i class="fas fa-edit"></i>
                           </a> &nbsp;&nbsp;

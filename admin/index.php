@@ -61,6 +61,9 @@ if(isset($_GET['page'])){
     $a = 5;
   }else if ($_GET['page']=="daftarbelibahan") {
     $a = 5;
+  }
+  else if ($_GET['page']=="konfirmasibelibahan") {
+      $a = 5;
 
   }else if ($_GET['page']=="editorder") {
     $a = 6;
@@ -270,18 +273,33 @@ if(isset($_GET['page'])){
               ?>
 
               <?php
-              if(helper(4, $account->id_level)){
+              if(helper(4, $account->id_level) || helper(3, $account->id_level)){
                 ?>
                 <li class="nav-item ">
                   <a class="nav-link <?php if($a == 5) echo 'active'; ?>" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-5" aria-controls="submenu-5"><i class="fa fa-fw fa-cube"></i>Pembelian Bahan<span class="badge badge-success">5</span></a>
                   <div id="submenu-5" class="collapse submenu" style="">
                     <ul class="nav flex-column">
-                      <li class="nav-item">
-                        <a class="nav-link" href="index.php?page=daftarbelibahan">List Pembelian Bahan</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="index.php?page=tambahbelibahan">Tambah Pembelian Bahan</a>
-                      </li>
+                      <?php
+                      if(helper(3, $account->id_level)){
+                        ?>
+                        <li class="nav-item">
+                          <a class="nav-link" href="index.php?page=daftarbelibahan">List Pembelian Bahan</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="index.php?page=tambahbelibahan">Tambah Pembelian Bahan</a>
+                        </li>
+                        <?php
+                      }
+                      ?>
+                      <?php
+                      if(helper(4, $account->id_level)){
+                        ?>
+                        <li class="nav-item">
+                          <a class="nav-link" href="index.php?page=konfirmasibelibahan">Permintaan Pembelian</a>
+                        </li>
+                        <?php
+                      }
+                      ?>
                     </ul>
                   </div>
                 </li>
@@ -380,9 +398,7 @@ if(isset($_GET['page'])){
                         <?php
                       }
                       ?>
-
-                      <a class="nav-link" href="index.php?page=laporanbelibahan">Laporan Pembelian Bahan</a>
-
+                      <a class="nav-link" href="index.php?page=laporanbelibahan"><?php if(helper(4, $account->id_level)) echo "Faktur & ";?>Laporan Pembelian Bahan </a>
                       <?php
                       if(helper(2, $account->id_level) || helper(1, $account->id_level) || helper(3, $account->id_level)){
                         ?>
@@ -448,6 +464,8 @@ if(isset($_GET['page'])){
 
           }else if ($_GET['page']=="daftarbelibahan") {
             include 'views/belibahan/daftarbelibahan.php';
+          }else if ($_GET['page']=="konfirmasibelibahan") {
+            include 'views/belibahan/konfirmasibelibahan.php';
           }else if ($_GET['page']=="tambahbelibahan") {
             include 'views/belibahan/tambahbelibahan.php';
           }else if ($_GET['page']=="editbelibahan") {
@@ -566,6 +584,15 @@ if(isset($_GET['page'])){
 
 
 <script>
+
+  function directDelete(url){
+    var x = confirm("Apakah Anda ingin menghapus data ini?");
+    if(x){
+      window.location.href = url;
+    }
+  }
+
+
   CKEDITOR.replace( 'editor1', {
     // Define the toolbar: http://docs.ckeditor.com/ckeditor4/docs/#!/guide/dev_toolbar
     // The standard preset from CDN which we used as a base provides more features than we need.

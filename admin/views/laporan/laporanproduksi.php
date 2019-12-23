@@ -103,8 +103,8 @@ $produk = mysqli_query($h, "SELECT * from produk");
                   <th class="text-center">Tanggal Selesai Produksi</th>
                   <th class="text-center">Nama Produk</th>
                   <th class="text-center">Jumlah Produksi</th>
-                  <th class="text-center">Biaya Bahan</th>
                   <th class="text-center">Biaya tkl</th>
+                  <th class="text-center">Total Biaya Bahan</th>
                   <th class="text-center">Biaya produksi</th>
                 </tr>
                 </thead>
@@ -114,15 +114,41 @@ $produk = mysqli_query($h, "SELECT * from produk");
     $no = 0;
     while($row = $query->fetch_array()){
       $no++;
+      $biayabahan = 0;
+      $iddata = $row['no_produksi'];
+      $databahan2 = mysqli_query($h, "SELECT * from bahan_produksi
+          JOIN bahan ON bahan.bahan_id = bahan_produksi.id_bahan
+          where id_produksi = '$iddata'");
+      $jumlah_bahan = mysqli_num_rows(mysqli_query($h, "SELECT * from bahan_produksi WHERE id_produksi = ".$iddata));
+
+      if($jumlah_bahan > 0){
+        while($rows = $databahan2->fetch_array()){
+            $biayabahan = $biayabahan+$rows['biaya'];
+        }
+      }
+      $biayabahan = $biayabahan*$row['jml_produksi'];
+      $biayaproduksi = ($biayabahan+$row['biaya_tkl']);
       ?>
       <tr class="border-0">
         <td class="text-center" style="width:20px"><?= $no ?></td>
         <td align="center" height="30"><?php echo parseTanggal($row['tanggal_selesai']); ?></td>
         <td align="center"><?php echo $row['nama_produk']; ?></td>
         <td align="center"><?php echo $row['jml_produksi']; ?></td>
-        <td align="center"><?php echo 'Rp.'.number_format($row['biaya_bahan'],2,',','.');?></td>
         <td align="center"><?php echo 'Rp.'.number_format($row['biaya_tkl'],2,',','.');?></td>
-        <td align="center"><?php echo 'Rp.'.number_format($row['biaya_produksi'],2,',','.');?></td>
+        <td align="center">
+          <?php
+            if($biayabahan == 0){
+              echo "-";
+            } else {
+          ?>
+          Rp. <?= number_format($biayabahan,2,',','.')  ?>
+          <?php
+          }
+          ?>
+        </td>
+        <td align="center">
+          Rp. <?= number_format($biayaproduksi,2,',','.')  ?>
+        </td>
       </tr>
       <?php
     }

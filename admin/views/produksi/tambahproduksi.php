@@ -43,9 +43,8 @@
           <div class="card">
             <h5 class="card-header">Masukkan seluruh data dengan benar!</h5>
             <div class="card-body">
-              <form action="" method="post" enctype="multipart/form-data">
-                <input name="id" type="hidden" class="form-control" value="<?php echo $row['no_produksi'];  ?>">
-
+              <form action="" method="post">
+                <!-- <input name="id" type="hidden" class="form-control" value="<?php echo $row['no_produksi'];  ?>"> -->
                 <div class="form-group">
                   <label for="inputText3" class="col-form-label">Produk</label>
                   <select name="produk_id" class="form-control">
@@ -70,18 +69,9 @@
                   <input required name="jml_produksi" type="text" class="form-control">
                 </div>
                 <div class="form-group">
-                  <label for="inputText3" class="col-form-label">Biaya Bahan</label>
-                  <input required name="biaya_bahan" type="text" step="any" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="inputText3" class="col-form-label">Biaya Tkl</label>
+                  <label for="inputText3" class="col-form-label">Biaya Tenaga Kerja Lepas</label>
                   <input required name="biaya_tkl" type="text" step="any" class="form-control">
                 </div>
-                <div class="form-group">
-                  <label for="inputText3" class="col-form-label">Biaya Produksi</label>
-                  <input required name="biaya_produksi" type="text" step="any" class="form-control">
-                </div>
-
                 <div class="custom-file mb-3">
                   <input type="submit" href="#" class="centerHorizontal btn btn-primary" value="Tambahkan"></a>
                 </div>
@@ -97,29 +87,31 @@
 
 <?php
 
-  if(isset($_POST['tanggal_selesai'])){
-    $id = $_POST['id'];
-    $tanggal_selesai = $_POST['tanggal_selesai'];
-    $produk_id = $_POST['produk_id'];
-    $jml_produksi = $_POST['jml_produksi'];
-    $biaya_bahan = $_POST['biaya_bahan'];
-    $biaya_tkl = $_POST['biaya_tkl'];
-    $biaya_produksi = $_POST['biaya_produksi'];
+if(isset($_POST['tanggal_selesai'])){
+  // $id = $_POST['id'];
+  $tanggal_selesai = $_POST['tanggal_selesai'];
+  $produk_id = $_POST['produk_id'];
+  $jml_produksi = $_POST['jml_produksi'];
+  $biaya_tkl = $_POST['biaya_tkl'];
 
-    $hasil= mysqli_query($h, "INSERT INTO produksi(tanggal_selesai, produk_id, jml_produksi, biaya_bahan, biaya_tkl, biaya_produksi)
-                              values('$tanggal_selesai', '$produk_id', '$jml_produksi', '$biaya_bahan', '$biaya_tkl', '$biaya_produksi')");
-    if($hasil){
-        echo "
-        <script>
-          window.alert('Berhasil menambahkan data produksi');
-          window.location='index.php?page=daftarproduksi'
-        </script>";
-      }else{
-        echo "
-        <script>
-          window.alert('Gagal menambah produksi karena ".mysqli_error($h)."'');
-        </script>";
-        echo "<meta http-equiv='refresh' content='0; url=http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]'>";
-      }
+  $hasil= mysqli_query($h, "INSERT INTO produksi(tanggal_selesai, produk_id, jml_produksi, biaya_tkl)
+  values('$tanggal_selesai', '$produk_id', '$jml_produksi', '$biaya_tkl')");
+  if($hasil){
+    // window.location='index.php?page=daftarproduksi'
+    $q_prod = mysqli_query($h, "SELECT * from produksi ORDER BY no_produksi DESC");
+    $prod = mysqli_fetch_assoc($q_prod);
+    // echo "index.php?page=editproduksi&done=false&id='".$prod['no_produksi'];
+    echo "
+    <script>
+    window.alert('Berhasil menambahkan data produksi');
+    window.location='index.php?page=editproduksi&done=false&id=".$prod['no_produksi']."'
+    </script>";
+  }else{
+    echo "
+    <script>
+    window.alert('Gagal menambah produksi karena ".mysqli_error($h)."'');
+    </script>";
+    // echo "<meta http-equiv='refresh' content='0; url=http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]'>";
+  }
 }
 ?>

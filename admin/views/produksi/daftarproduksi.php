@@ -65,53 +65,88 @@ if($query_produksi){
                 <table class="table">
                   <thead class="bg-light">
                     <tr class="border-0">
-                      <th class="border-0 centerHorizontal" style="width:20px">No</th>
-                      <th class="border-0">Tanggal Selesai Produksi</th>
-                      <th class="border-0">Nama Produk</th>
-                      <th class="border-0">Jumlah Produksi</th>
-                      <th class="border-0">Biaya Bahan</th>
-                      <th class="border-0">Biaya tkl</th>
-                      <th class="border-0">Biaya produksi</th>
+                      <th class="border-0 text-center" style="width:20px">No</th>
+                      <th class="border-0 text-center">Tanggal Selesai Produksi</th>
+                      <th class="border-0 text-center">Nama Produk</th>
+                      <th class="border-0 text-center">Jumlah Produksi</th>
+                      <th class="border-0 text-center">Biaya tkl</th>
+                      <th class="border-0 text-center">Biaya Bahan</th>
+                      <th class="border-0 text-center">Biaya produksi</th>
 
-                      <th class="border-0">Aksi</th>
+                      <th class="border-0 text-center">Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php
                     while($row = $query_produksi->fetch_array()){
                       $no++;
+                      $biayabahan = 0;
+                      $iddata = $row['no_produksi'];
+                      $databahan2 = mysqli_query($h, "SELECT * from bahan_produksi
+                          JOIN bahan ON bahan.bahan_id = bahan_produksi.id_bahan
+                          where id_produksi = '$iddata'");
+                      $jumlah_bahan = mysqli_num_rows(mysqli_query($h, "SELECT * from bahan_produksi WHERE id_produksi = ".$iddata));
+
+                      if($jumlah_bahan > 0){
+                        while($rows = $databahan2->fetch_array()){
+                            $biayabahan = $biayabahan+$rows['biaya'];
+                        }
+                      }
+                      $biayabahan = $biayabahan*$row['jml_produksi'];
+                      $biayaproduksi = ($biayabahan+$row['biaya_tkl']);
+
                       ?>
 
                       <tr>
-                        <td class="centerHorizontal">
+                        <td class="text-center">
                           <?php echo $no;?>
                         </td>
-                        <td>
-                          <?php echo $row['tanggal_selesai'];?>
+                        <td class="text-center">
+                          <?php echo parseTanggal($row['tanggal_selesai']);?>
                         </td>
-                        <td>
+                        <td class="text-center">
                           <?php echo $row['nama_produk'];?>
                         </td>
-                        <td>
+                        <td class="text-center">
                           <?php echo $row['jml_produksi'];?>
                         </td>
-                        <td>
-                          <?php echo $row['biaya_bahan'];?>
+                        <td class="text-center">
+                          Rp. <?= number_format($row['biaya_tkl'],2,',','.')  ?>
                         </td>
-                        <td>
-                          <?php echo $row['biaya_tkl'];?>
+                        <td class="text-center">
+                          <?php
+                            if($biayabahan == 0){
+                              echo "-";
+                            } else {
+                          ?>
+                          Rp. <?= number_format($biayabahan,2,',','.')  ?>
+                          <?php
+                          }
+                          ?>
                         </td>
-                        <td>
-                          <?php echo $row['biaya_produksi'];?>
+                        <td class="text-center">
+                          Rp. <?= number_format($biayaproduksi,2,',','.')  ?>
                         </td>
-
-                        <td>
-                          <a href="index.php?page=editproduksi&id=<?php echo $row['no_produksi']?>">
-                            <i class="fas fa-edit"></i>
-                          </a> &nbsp;&nbsp;
-                          <a href="#" onclick="hapusproduksi('index.php?page=daftarproduksi&delete=<?php echo $row['no_produksi']; ?>')">
-                            <i class="fas fa-trash"></i>
-                          </a>
+                        <td class="text-center">
+                          <?php
+                          if(date("Y-m-d") > $row['tanggal_selesai']){
+                            ?>
+                            <i style="color:green" class="fas fa-check-circle"></i> &nbsp;&nbsp;
+                            <a href="index.php?page=editproduksi&done=true&id=<?php echo $row['no_produksi']?>">
+                              <i class="fas fa-search"></i>
+                            </a>
+                            <?php
+                          } else {
+                            ?>
+                            <a href="index.php?page=editproduksi&done=false&id=<?php echo $row['no_produksi']?>">
+                              <i class="fas fa-edit"></i>
+                            </a> &nbsp;&nbsp;
+                            <a href="#" onclick="hapusproduksi('index.php?page=daftarproduksi&delete=<?php echo $row['no_produksi']; ?>')">
+                              <i class="fas fa-trash"></i>
+                            </a>
+                            <?php
+                          }
+                          ?>
                         </td>
                       </tr>
 

@@ -1,31 +1,9 @@
 <?php
-$jumlah = mysqli_num_rows(mysqli_query($h, "SELECT * from purchase_bahan"));
-$banyak_data = floor($jumlah/5)+1;
-$limit = 0;
-if(isset($_GET["r"])){
-  $active_list = $_GET["r"];
-  $first = ($_GET["r"]*5);
-  $limit = $first-5;
-  $query_purchase_bahan = mysqli_query($h, "SELECT * from purchase_bahan
-                                    JOIN bahan ON purchase_bahan.bahan_id = bahan.bahan_id
-                                    JOIN supplier ON bahan.supplier_id = supplier.supplier_id
-                                    ORDER BY purchase_bahan.tanggal ASC LIMIT 5 OFFSET ".$limit);
-}else{
-  if($banyak_data>1){
-      $query_purchase_bahan = mysqli_query($h, "SELECT * from purchase_bahan
-                                        JOIN bahan ON purchase_bahan.bahan_id = bahan.bahan_id
-                                        JOIN supplier ON bahan.supplier_id = supplier.supplier_id
-                                        ORDER BY purchase_bahan.tanggal ASC LIMIT 5");
-    }else{
-      $query_purchase_bahan = mysqli_query($h, "SELECT * from purchase_bahan
-                                        JOIN bahan ON purchase_bahan.bahan_id = bahan.bahan_id
-                                        JOIN supplier ON bahan.supplier_id = supplier.supplier_id
-                                        ORDER BY purchase_bahan.tanggal ASC");
-    }
-}
-if($query_purchase_bahan){
-	$no = $limit;
-}
+$query_purchase_bahan = mysqli_query($h, "SELECT * from purchase_bahan
+                                  JOIN bahan ON purchase_bahan.bahan_id = bahan.bahan_id
+                                  JOIN supplier ON bahan.supplier_id = supplier.supplier_id
+                                  WHERE supplier.supplier_id = ".$account->supplier_id."
+                                  ORDER BY purchase_bahan.tanggal ASC");
 ?>
 <div class="dashboard-ecommerce" style="
     min-height: 565px;">
@@ -79,10 +57,10 @@ if($query_purchase_bahan){
                   </thead>
                   <tbody>
                     <?php
+                    $no = 0;
                     while($row = $query_purchase_bahan->fetch_array()){
                       $no++;
                       ?>
-
                       <tr>
                         <td class="centerHorizontal">
                           <?php echo $no;?>
@@ -105,11 +83,8 @@ if($query_purchase_bahan){
                         <td class="text-center">
                           <?php if($row['confirmed'] == ""){
                             ?>
-                            <a href="index.php?page=editbelibahan&id=<?php echo $row['id']?>">
-                              <i class="fas fa-edit"></i>
-                            </a> &nbsp;&nbsp;
-                            <a href="#" onclick="hapusbelibahan('index.php?page=daftarbelibahan&delete=<?php echo $row['id']; ?>')">
-                              <i class="fas fa-trash"></i>
+                            <a href="#" onclick="hapusbelibahan('index.php?page=konfirmasibelibahan&id=<?php echo $row['id']; ?>')">
+                              <i class="fas fa-check-square"></i> Konfirmasi
                             </a>
                             <?php
                           } else {
@@ -126,31 +101,6 @@ if($query_purchase_bahan){
                   </tbody>
                 </table>
               </div>
-              <div class="col-md-12">
-                <nav aria-label="Page navigation">
-                  <ul class="pagination">
-                    <?php
-                    if($banyak_data>1){
-                      for($i=1;$i<=$banyak_data;$i++){
-                        if(isset($active_list)){
-                          if($active_list==$i){
-                            echo '<li class="page-item active"><a class="page-link">'.$i.'</a></li>';
-                          }else{
-                            echo "<li class='page-item'><a class='page-link' href='?r=".$i."'>".$i."</a></li>";
-                          }
-                        }else{
-                          if($i==1){
-                            echo '<li class="active page-item"><a class="page-link">'.$i.'</a></li>';
-                          }else{
-                            echo "<li class='page-item'><a class='page-link' href='?r=".$i."'>".$i."</a></li>";
-                          }
-                        }
-                      }
-                    }
-                    ?>
-                  </ul>
-                </nav>
-              </div>
             </div>
           </div>
         </div>
@@ -159,20 +109,20 @@ if($query_purchase_bahan){
   </div>
 </div>
 <?php
-if (isset($_GET['delete'])) {
-  $id=$_GET['delete'];
-  $del=mysqli_query($h,"DELETE FROM purchase_bahan WHERE id = '$id'");
-  if ($del) {
+if (isset($_GET['id'])) {
+  $id = $_GET['id'];
+  $hasil = mysqli_query($h, "UPDATE purchase_bahan SET confirmed = 'Y' WHERE id = ".$id);
+  if ($hasil) {
     ?>
     <script type="text/javascript">
     // alert("berhasil menghapus purchase_bahan");
-    window.location.href="index.php?page=daftarbelibahan";
+    window.location.href="index.php?page=konfirmasibelibahan";
     </script>
     <?php
   }else {
     ?>
     <script language="javascript">
-    alert ("Pembelian Bahan gagal Di Hapus"); document.location="index.php?page=daftarbelibahan";
+    alert ("Pembelian Bahan gagal dikonfirmasi"); document.location="index.php?page=konfirmasibelibahan";
     </script>
     <?php
   }
@@ -180,7 +130,7 @@ if (isset($_GET['delete'])) {
 ?>
 <script>
 function hapusbelibahan(url){
-  var x = confirm("Apakah Anda ingin menghapus data ini?");
+  var x = confirm("Apakah Anda ingin mengkonfirmasi Pembelian ini?");
   if(x){
     window.location.href = url;
   }

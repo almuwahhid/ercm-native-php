@@ -33,12 +33,14 @@
 
   if(helper(4, $account->id_level)){
     $query = mysqli_query($h, "SELECT * from purchase_bahan
-      JOIN supplier ON purchase_bahan.supplier_id = supplier.supplier_id
-      JOIN produksi ON purchase_bahan.no_produksi = produksi.no_produksi
-      JOIN bahan ON purchase_bahan.supplier_id = supplier.supplier_id
+      JOIN bahan ON purchase_bahan.bahan_id = bahan.bahan_id
+      JOIN supplier ON bahan.supplier_id = supplier.supplier_id
       where supplier.supplier_id = $account->supplier_id AND tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'");
   } else {
-    $query = mysqli_query($h, "SELECT * from purchase_bahan JOIN supplier ON purchase_bahan.supplier_id = supplier.supplier_id JOIN produksi ON purchase_bahan.no_produksi = produksi.no_produksi where tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'");
+    $query = mysqli_query($h, "SELECT * from purchase_bahan
+                                JOIN bahan ON purchase_bahan.bahan_id = bahan.bahan_id
+                                JOIN supplier ON bahan.supplier_id = supplier.supplier_id
+                                WHERE tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'");
   }
   // $query = mysqli_query($h, "SELECT * from purchase_bahan JOIN supplier ON purchase_bahan.supplier_id = supplier.supplier_id JOIN produksi ON purchase_bahan.no_produksi = produksi.no_produksi where tanggal BETWEEN '$tanggal_awal' AND '$tanggal_akhir'");
 
@@ -71,12 +73,17 @@
         text-align: center;
         border-right: 1px solid #e3e3e3;
         padding: 10px;
+        display: inline-block;
+        vertical-align: middle;
+        line-height: normal;
       }
       tbody td{
         text-align:center;
         border-top: 1px solid #e3e3e3;
         border-right: 1px solid #e3e3e3;
-        padding: 10px;
+        display: inline-block;
+        vertical-align: middle;
+        line-height: normal;
       }
       tbody tr:nth-child(even){
         background: #F6F5FA;
@@ -101,42 +108,61 @@
   	  <table>
   	  	<thead>
   	  		<tr>
-            <th class="text-center" style="width:20px">No</th>
-            <th class="text-center">Nama Bahan</th>
-            <th class="text-center">Nama Supplier</th>
-            <th class="text-center">Tanggal Pembelian</th>
-            <th class="text-center">Jumlah KBP</th>
-            <th class="text-center">Biaya Bahan</th>
-            <th class="text-center">Tanggal Selesai Produksi</th>
-
+            <th align="center" style="text-align:center;width:5px">No</th>
+            <th align="center" style="text-align:center;width:80px">Tanggal Pembelian Bahan</th>
+            <th align="center" style="text-align:center;width:100px">Bahan</th>
+            <th align="center" style="text-align:center;width:70px">Supplier</th>
+            <th align="center">Jumlah <br>Pembelian</th>
+            <th align="center" style="width:60px">Status</th>
+            <th align="center" style="width:60px">Jumlah Biaya</th>
   	  		</tr>
   	  	</thead>
   	  	<tbody>';
         $no = 0;
+        $totalbiaya = 0;
         while($row = $query->fetch_array()){
+          $totalbiaya += $row['biaya_bahan'];
+          if($row['confirmed'] == ""){
+            $confirmed = "Belum <br>Dikonfirmasi";
+          }else {
+            $confirmed = "Dikonfirmasi";
+          }
           $no++;
           $html = $html.'<tr class="border-0">
-            <td class="text-center" style="width:15px">'.$no.'</td>
+            <td align="center" style="height:20px;text-align:center;width:5px">'.$no.'</td>
+            <td align="center">'.parseTanggal($row['tanggal']).'</td>
             <td align="center">'.$row['nama_bahan'].'</td>
             <td align="center">'.$row['nama'].'</td>
-            <td align="center" height="30">'.parseTanggal($row['tanggal']).'</td>
             <td align="center">'.$row['jml_kbp'].'</td>
+            <td align="center">'.$confirmed.'</td>
             <td align="center">'.'Rp.'.number_format($row['biaya_bahan'],2,',','.').'</td>
-            <td align="center">'.parseTanggal($row['tanggal_selesai']).'</td>
-
           </tr>';
         }
-  	  	$html = $html.'</tbody>
+  	  	$html = $html.'
+        <tr>
+          <td style="height:20px" align="right" colspan="6"><b>Total Biaya &nbsp;</b></td>
+          <td align="center">Rp.'.number_format($totalbiaya,2,',','.').'</td>
+        </tr>
+        </tbody>
   	  </table>
   	 </div>
-     <div style="width:700px;text-align:center;margin-top:20px">
-       ERCM, '.strftime("%d %B %Y").'
-       <br><br><br><br><br><br>
-       Admin
-     </div>
+     <table style="border:0px">
+      <tr>
+        <td style=width:450px>
+        </td>
+        <td style="width:30%">
+        <div style="width:300px;text-align:center;margin-top:20px">
+          ERCM, '.strftime("%d %B %Y").'
+          <br><br><br><br><br><br>
+          Admin
+        </div>
+        </td>
+      </tr>
+     </table>
   </body>
   </html>';
 
+  // $html2pdf = new Html2Pdf('L', 'A4', 'en');
   $html2pdf = new Html2Pdf();
   $html2pdf->writeHTML($html);
   $html2pdf->output();
