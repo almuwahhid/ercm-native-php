@@ -76,10 +76,9 @@
     $tanggal = date('Y-m-d');
     $jml_kbp = $_POST['jml_kbp'];
     $bahan = json_decode($_POST['bahan']);
-    $biaya_bahan = $jml_kbp*$bahan->harga;
 
-    $hasil= mysqli_query($h, "INSERT INTO purchase_bahan(tanggal, bahan_id, jml_kbp, biaya_bahan)
-                              values('$tanggal', '$bahan->bahan_id', '$jml_kbp', '$biaya_bahan')");
+    $hasil= mysqli_query($h, "INSERT INTO purchase_bahan(tanggal, bahan_id, jml_kbp)
+                              values('$tanggal', '$bahan->bahan_id', '$jml_kbp')");
     if($hasil){
         echo "
         <script>

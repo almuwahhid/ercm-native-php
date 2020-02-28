@@ -109,33 +109,35 @@
   	  	<thead>
   	  		<tr>
             <th align="center" style="text-align:center;width:5px">No</th>
-            <th align="center" style="text-align:center;width:80px">Tanggal Pembelian Bahan</th>
+            <th align="center" style="text-align:center;width:80px">Tanggal<br>Pembelian</th>
             <th align="center" style="text-align:center;width:100px">Bahan</th>
             <th align="center" style="text-align:center;width:70px">Supplier</th>
             <th align="center">Jumlah <br>Pembelian</th>
-            <th align="center" style="width:60px">Status</th>
-            <th align="center" style="width:60px">Jumlah Biaya</th>
+            <th align="center" style="width:60px">Harga</th>
+            <th align="center" style="width:60px">Biaya</th>
   	  		</tr>
   	  	</thead>
   	  	<tbody>';
         $no = 0;
         $totalbiaya = 0;
+
         while($row = $query->fetch_array()){
-          $totalbiaya += $row['biaya_bahan'];
+          $totalbiaya += ($row['jml_kbp']*$row['harga']);
           if($row['confirmed'] == ""){
             $confirmed = "Belum <br>Dikonfirmasi";
           }else {
             $confirmed = "Dikonfirmasi";
           }
           $no++;
+          // <td align="center">'.$confirmed.'</td>
           $html = $html.'<tr class="border-0">
             <td align="center" style="height:20px;text-align:center;width:5px">'.$no.'</td>
             <td align="center">'.parseTanggal($row['tanggal']).'</td>
             <td align="center">'.$row['nama_bahan'].'</td>
             <td align="center">'.$row['nama'].'</td>
             <td align="center">'.$row['jml_kbp'].'</td>
-            <td align="center">'.$confirmed.'</td>
-            <td align="center">'.'Rp.'.number_format($row['biaya_bahan'],2,',','.').'</td>
+            <td align="center">'.'Rp.'.number_format(($row['harga']),2,',','.').'</td>
+            <td align="center">'.'Rp.'.number_format(($row['jml_kbp']*$row['harga']),2,',','.').'</td>
           </tr>';
         }
   	  	$html = $html.'

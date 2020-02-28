@@ -100,7 +100,7 @@ if($query_purchase_bahan){
                           <?php echo $row['jml_kbp'];?>
                         </td>
                         <td align="center">
-                          <?php echo 'Rp.'.number_format($row['biaya_bahan'],2,',','.');?>
+                          <?php echo 'Rp.'.number_format(($row['jml_kbp']*$row['harga']),2,',','.');?>
                         </td>
                         <td class="text-center">
                           <?php if($row['confirmed'] == ""){

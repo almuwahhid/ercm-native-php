@@ -23,6 +23,7 @@ if(isset($_GET["r"])){
 if($query_produksi){
 	$no = $limit;
 }
+
 ?>
 <div class="dashboard-ecommerce" style="
     min-height: 565px;">
@@ -69,8 +70,6 @@ if($query_produksi){
                       <th class="border-0 text-center">Tanggal Selesai Produksi</th>
                       <th class="border-0 text-center">Nama Produk</th>
                       <th class="border-0 text-center">Jumlah Produksi</th>
-                      <th class="border-0 text-center">Biaya tkl</th>
-                      <th class="border-0 text-center">Biaya Bahan</th>
                       <th class="border-0 text-center">Biaya produksi</th>
 
                       <th class="border-0 text-center">Aksi</th>
@@ -82,18 +81,27 @@ if($query_produksi){
                       $no++;
                       $biayabahan = 0;
                       $iddata = $row['no_produksi'];
+                      $jumlah_bahan = mysqli_num_rows(mysqli_query($h, "SELECT * from bahan_produksi
+                                                                        JOIN produk ON produk.produk_id = bahan_produksi.id_produk
+                                                                        JOIN produksi ON produksi.produk_id = produk.produk_id
+                                                                        WHERE no_produksi = ".$iddata));
+
                       $databahan2 = mysqli_query($h, "SELECT * from bahan_produksi
                           JOIN bahan ON bahan.bahan_id = bahan_produksi.id_bahan
-                          where id_produksi = '$iddata'");
-                      $jumlah_bahan = mysqli_num_rows(mysqli_query($h, "SELECT * from bahan_produksi WHERE id_produksi = ".$iddata));
+                          JOIN produk ON produk.produk_id = bahan_produksi.id_produk
+                          JOIN produksi ON produksi.produk_id = produk.produk_id
+                          where no_produksi = '$iddata'");
+                      $dataproduk = mysqli_fetch_assoc(mysqli_query($h, "SELECT * from produk
+                              JOIN produksi ON produk.produk_id = produksi.produk_id
+                              where no_produksi = '$iddata'"));
 
                       if($jumlah_bahan > 0){
                         while($rows = $databahan2->fetch_array()){
-                            $biayabahan = $biayabahan+$rows['biaya'];
+                            $biayabahan = $biayabahan+($rows['jumlah']*$rows['harga']);
                         }
                       }
+                      $biayabahan = $biayabahan+$dataproduk['biayaproduk'];
                       $biayabahan = $biayabahan*$row['jml_produksi'];
-                      $biayaproduksi = ($biayabahan+$row['biaya_tkl']);
 
                       ?>
 
@@ -111,9 +119,6 @@ if($query_produksi){
                           <?php echo $row['jml_produksi'];?>
                         </td>
                         <td class="text-center">
-                          Rp. <?= number_format($row['biaya_tkl'],2,',','.')  ?>
-                        </td>
-                        <td class="text-center">
                           <?php
                             if($biayabahan == 0){
                               echo "-";
@@ -124,10 +129,7 @@ if($query_produksi){
                           }
                           ?>
                         </td>
-                        <td class="text-center">
-                          Rp. <?= number_format($biayaproduksi,2,',','.')  ?>
-                        </td>
-                        <td class="text-center">
+                        <td class="text-center" style="width:100px">
                           <?php
                           if(date("Y-m-d") > $row['tanggal_selesai']){
                             ?>
@@ -166,13 +168,13 @@ if($query_produksi){
                           if($active_list==$i){
                             echo '<li class="page-item active"><a class="page-link">'.$i.'</a></li>';
                           }else{
-                            echo "<li class='page-item'><a class='page-link' href='?r=".$i."'>".$i."</a></li>";
+                            echo "<li class='page-item'><a class='page-link' href='index.php?page=daftarproduksi&r=".$i."'>".$i."</a></li>";
                           }
                         }else{
                           if($i==1){
                             echo '<li class="active page-item"><a class="page-link">'.$i.'</a></li>';
                           }else{
-                            echo "<li class='page-item'><a class='page-link' href='?r=".$i."'>".$i."</a></li>";
+                            echo "<li class='page-item'><a class='page-link' href='index.php?page=daftarproduksi&r=".$i."'>".$i."</a></li>";
                           }
                         }
                       }

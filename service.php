@@ -53,12 +53,22 @@
       }
 
       if($isNew){
+        $hargaproduk = 0;
+
         $produk_id = $produk->produk_id;
-        $produk_harga = ($produk->harga+$produk->laba);
+        $databahan2 = mysqli_query($h, "SELECT * from produk
+            JOIN bahan_produksi ON produk.produk_id = bahan_produksi.id_produk
+            JOIN bahan ON bahan.bahan_id = bahan_produksi.id_bahan
+            where produk.produk_id = '$produk_id'");
+        while($rows = $databahan2->fetch_array()){
+            $hargaproduk = $hargaproduk+($rows['jumlah']*$rows['harga']);
+        }
+        $hargaproduk = $hargaproduk+$produk->biayaproduk+$produk->laba;
+
         $noorder = $data['no_order'];
-        $subtotal = $jumlah_produk * $produk_harga;
+        $subtotal = $jumlah_produk * $hargaproduk;
         $t_query = mysqli_query($h, "INSERT INTO order_detail(no_order, produk_id, hrg_jual, jumlah, subtotal)
-                  values('$noorder','$produk_id', '$produk_harga', '$jumlah_produk', '$subtotal')");
+                  values('$noorder','$produk_id', '$hargaproduk', '$jumlah_produk', '$subtotal')");
 
         if($t_query){
           echo "

@@ -16,8 +16,6 @@
     $databahan2 = mysqli_query($h, "SELECT * from bahan_produksi
         JOIN bahan ON bahan.bahan_id = bahan_produksi.id_bahan
         where id_produksi = '$iddata'");
-
-    $jumlah_bahan = mysqli_num_rows(mysqli_query($h, "SELECT * from bahan_produksi WHERE id_produksi = ".$iddata));
   } else if(isset($_GET['delete'])){
     $iddata = $_GET['delete'];
     $idprod = $_GET['idprod'];
@@ -39,6 +37,7 @@
   }
 ?>
 
+''
 <div class="dashboard-ecommerce">
   <div class="container-fluid dashboard-content ">
     <!-- ============================================================== -->
@@ -66,28 +65,9 @@
     <div class="ecommerce-widget">
       <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-5">
-          <div class="tab-regular">
-            <ul class="nav nav-tabs " id="myTab" role="tablist">
-              <li class="nav-item">
-                <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Detail Produksi</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Bahan Produksi</a>
-              </li>
-            </ul>
-            <div class="tab-content" id="myTabContent">
-              <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">
-                <?php
-                  include('detailproduksi.php');
-                 ?>
-              </div>
-              <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                <?php
-                  include('bahanproduksi.php');
-                 ?>
-              </div>
-            </div>
-          </div>
+          <?php
+            include('detailproduksi.php');
+          ?>
         </div>
 
       </div>

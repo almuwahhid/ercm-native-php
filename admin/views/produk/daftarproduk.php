@@ -88,7 +88,7 @@ if($query_produk){
                         </td>
 
                           <td>
-                            <a href="index.php?page=detailproduk&id=<?php echo $row['produk_id']?>"><?php echo "lihat detail"?>
+                            <a href="index.php?page=editproduk&id=<?php echo $row['produk_id']?>"><?php echo "lihat detail"?>
                           </td>
                           <?php
                           if(helper(3, $account->id_level)){

@@ -68,10 +68,6 @@
                   <label for="inputText3" class="col-form-label">Jumlah Produksi</label>
                   <input required name="jml_produksi" type="text" class="form-control">
                 </div>
-                <div class="form-group">
-                  <label for="inputText3" class="col-form-label">Biaya Tenaga Kerja Lepas</label>
-                  <input required name="biaya_tkl" type="text" step="any" class="form-control">
-                </div>
                 <div class="custom-file mb-3">
                   <input type="submit" href="#" class="centerHorizontal btn btn-primary" value="Tambahkan"></a>
                 </div>
@@ -85,6 +81,7 @@
 </div>
 
 
+
 <?php
 
 if(isset($_POST['tanggal_selesai'])){
@@ -92,10 +89,9 @@ if(isset($_POST['tanggal_selesai'])){
   $tanggal_selesai = $_POST['tanggal_selesai'];
   $produk_id = $_POST['produk_id'];
   $jml_produksi = $_POST['jml_produksi'];
-  $biaya_tkl = $_POST['biaya_tkl'];
 
-  $hasil= mysqli_query($h, "INSERT INTO produksi(tanggal_selesai, produk_id, jml_produksi, biaya_tkl)
-  values('$tanggal_selesai', '$produk_id', '$jml_produksi', '$biaya_tkl')");
+  $hasil= mysqli_query($h, "INSERT INTO produksi(tanggal_selesai, produk_id, jml_produksi)
+  values('$tanggal_selesai', '$produk_id', '$jml_produksi')");
   if($hasil){
     // window.location='index.php?page=daftarproduksi'
     $q_prod = mysqli_query($h, "SELECT * from produksi ORDER BY no_produksi DESC");

@@ -115,13 +115,23 @@ if($query_produk){
             <?php
             while($row = $query_produk->fetch_array()){
               $no++;
+              $hargaproduk = 0;
+              $produk_id = $row['produk_id'];
+              $databahan2 = mysqli_query($h, "SELECT * from produk
+                  JOIN bahan_produksi ON produk.produk_id = bahan_produksi.id_produk
+                  JOIN bahan ON bahan.bahan_id = bahan_produksi.id_bahan
+                  WHERE produk.produk_id = $produk_id");
+              while($rows = $databahan2->fetch_array()){
+                  $hargaproduk = $hargaproduk+($rows['jumlah']*$rows['harga']);
+              }
+              $hargaproduk = $hargaproduk+$row["biayaproduk"];
               ?>
               <div class="col-md-4 col-lg-3 col-sm-4 col-xs-12">
                 <div class="col-md-12 item-product">
                   <div class="category">
                     <div class="ht__cat__thumb">
                       <a href="index.php?page=produk-details&id=<?php echo $row['produk_id']?>">
-                        <img src="admin/data/photos/<?php echo $row['gambar'];?>" alt="product images"></div>
+                        <img class="heightRect center-cropped" src="admin/data/photos/<?php echo $row['gambar'];?>" alt="product images"></div>
                       </a>
                     </div>
                     <div class="fr__hover__info">
@@ -135,7 +145,7 @@ if($query_produk){
                       </div>
                       <ul class="fr__pro__prize">
                         <li class="old__prize">
-                          Rp. <?= number_format(($row['harga']+$row['laba']),2,',','.') ?>
+                          Rp. <?= number_format(($hargaproduk+$row['laba']),2,',','.') ?>
                         </li>
                         <li></li>
                       </ul>
@@ -143,8 +153,11 @@ if($query_produk){
                         <li style="margin-top:10px;text-align:right;margin-bottom:20px">
                           <?php
                             if($isUserLogin){
+                              $sourcedata = $row;
+                              $sourcedata['deskripsi'] = "";
+                              $sourcedata[2] = "";
                             ?>
-                            <button type="button" class="btn btn-info" onclick="onButtonPesan('<?= str_replace('"', "+", json_encode($row)); ?>')">Pesan</button>
+                            <button type="button" class="btn btn-info" onclick="onButtonPesan('<?= str_replace('"', "+", json_encode($sourcedata)); ?>')">Pesan</button>
                             <?php
                             }
                            ?>

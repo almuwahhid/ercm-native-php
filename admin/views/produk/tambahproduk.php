@@ -54,8 +54,8 @@
                   <textarea required name="deskripsi" id="editor1" type="text" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
-                  <label for="inputText3" class="col-form-label">Harga</label>
-                  <input required name="harga" type="number" step="any" class="form-control">
+                  <label for="inputText3" class="col-form-label">Biaya Pembuatan Produk</label>
+                  <input required name="biayaproduk" type="number" step="any" class="form-control" value="0" />
                 </div>
                 <div class="form-group">
                   <label for="inputText3" class="col-form-label">Stok</label>
@@ -102,7 +102,7 @@
     $nama = $_POST['nama'];
     $deskripsi = $_POST['deskripsi'];
     $stok = $_POST['stok'];
-    $harga = $_POST['harga'];
+    $biayaproduk = $_POST['biayaproduk'];
     $laba = $_POST['laba'];
     $kategori_id = $_POST['kategori_id'];
 
@@ -112,14 +112,15 @@
     $path = "data/photos/".$namaFile;
     move_uploaded_file($tmp_file, $path);
 
-    $hasil= mysqli_query($h, "INSERT INTO produk(nama_produk, deskripsi, harga, stok, laba, gambar, kategori_id)
-                              values('$nama','$deskripsi', '$harga', '$stok', '$laba', '$namaFile', '$kategori_id')");
+    $hasil= mysqli_query($h, "INSERT INTO produk(nama_produk, deskripsi, biayaproduk, stok, laba, gambar, kategori_id)
+                              values('$nama','$deskripsi', '$biayaproduk', '$stok', '$laba', '$namaFile', '$kategori_id')");
     if($hasil){
-      echo "hei";
-        echo "
+      $q_prod = mysqli_query($h, "SELECT * from produk ORDER BY produk_id DESC");
+      $prod = mysqli_fetch_assoc($q_prod);
+      echo "
         <script>
           window.alert('Berhasil menambahkan data produk');
-          window.location='index.php?page=daftarproduk'
+          window.location='index.php?page=editproduk'&id=".$prod['produk_id']."'
         </script>";
       }else{
         echo "Gagal menambah produk karena ".mysqli_error($h);

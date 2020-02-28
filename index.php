@@ -59,6 +59,12 @@
 
   <!-- Modernizr JS -->
   <script src="js/vendor/modernizr-3.5.0.min.js"></script>
+  <style>
+  .center-cropped {
+    object-fit: cover; /* Do not scale the image */
+    object-position: center; /* Center the image within the element */
+  }
+  </style>
 </head>
 <body style="background-color:#F1F1F1">
   <!--[if lt IE 8]>
@@ -308,7 +314,7 @@
                     </div>
                     <div class="shp__pro__details">
                       <h2><a href="#"><?= $row['nama_produk'] ?></a></h2>
-                      <span class="quantity">Jumlah : <?= $row['jumlah'] ?> x <?= ($row['harga']+$row['laba']) ?></span>
+                      <span class="quantity">Jumlah : <?= $row['jumlah'] ?> x <?= ($row['hrg_jual']) ?></span>
                       <span class="shp__price">Rp. <?= number_format($row['subtotal'],2,',','.') ?></span>
                     </div>
                     <div class="remove__btn">
@@ -469,6 +475,7 @@
     --------------------------------------*/
       function onButtonPesan(data){
         var realdata = data.split('\/').join('/');
+        console.log("hii "+realdata.split('+').join('"').split('</p> "').join('</p>'));
         var barang = JSON.parse(realdata.split('+').join('"'));
         // console.log("hii "+data.replace(/+/g, '"'));
 

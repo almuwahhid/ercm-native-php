@@ -72,7 +72,7 @@
                                             </td>
                                             <td align="center">
                                               <div class="centerVertical">
-                                                Rp. <?= number_format(($row1['harga']+$row1['laba']),2,',','.')?>
+                                                Rp. <?= number_format(($row1['hrg_jual']),2,',','.')?>
                                               </div>
                                             </td>
                                             <td align="center">

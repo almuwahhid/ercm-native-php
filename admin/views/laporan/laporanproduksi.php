@@ -78,7 +78,11 @@ $produk = mysqli_query($h, "SELECT * from produk");
       }else{
         ?><i><b>Informasi : </b> Hasil pencarian data berdasarkan periode Tanggal <b><?php echo parseTanggal($_POST['tanggal_awal'])?></b> s/d <b><?php echo parseTanggal($_POST['tanggal_akhir'])?></b></i>
         <?php
-        $query = mysqli_query($h, "SELECT * from produksi JOIN produk ON produk.produk_id = produksi.produk_id where produk.produk_id = '$produk_id' AND tanggal_selesai BETWEEN '$tanggal_awal' AND '$tanggal_akhir'");
+        $query = mysqli_query($h, "SELECT * from produksi
+                                    JOIN produk ON produk.produk_id = produksi.produk_id
+                                    where produk.produk_id = '$produk_id'
+                                    AND tanggal_selesai BETWEEN '$tanggal_awal'
+                                    AND '$tanggal_akhir'");
       }
       ?>
     </p>
@@ -103,9 +107,10 @@ $produk = mysqli_query($h, "SELECT * from produk");
                   <th class="text-center">Tanggal Selesai Produksi</th>
                   <th class="text-center">Nama Produk</th>
                   <th class="text-center">Jumlah Produksi</th>
-                  <th class="text-center">Biaya tkl</th>
-                  <th class="text-center">Total Biaya Bahan</th>
-                  <th class="text-center">Biaya produksi</th>
+                  <th class="border-0 text-center">Biaya produksi</th>
+                  <?php if(helper(3, $account->id_level)){ ?>
+                    <th class="text-center">Faktur</th>
+                  <?php } ?>
                 </tr>
                 </thead>
                 <tbody>
@@ -116,25 +121,33 @@ $produk = mysqli_query($h, "SELECT * from produk");
       $no++;
       $biayabahan = 0;
       $iddata = $row['no_produksi'];
+      $jumlah_bahan = mysqli_num_rows(mysqli_query($h, "SELECT * from bahan_produksi
+                                                        JOIN produk ON produk.produk_id = bahan_produksi.id_produk
+                                                        JOIN produksi ON produksi.produk_id = produk.produk_id
+                                                        WHERE no_produksi = ".$iddata));
+
       $databahan2 = mysqli_query($h, "SELECT * from bahan_produksi
           JOIN bahan ON bahan.bahan_id = bahan_produksi.id_bahan
-          where id_produksi = '$iddata'");
-      $jumlah_bahan = mysqli_num_rows(mysqli_query($h, "SELECT * from bahan_produksi WHERE id_produksi = ".$iddata));
+          JOIN produk ON produk.produk_id = bahan_produksi.id_produk
+          JOIN produksi ON produksi.produk_id = produk.produk_id
+          where no_produksi = '$iddata'");
+      $dataproduk = mysqli_fetch_assoc(mysqli_query($h, "SELECT * from produk
+          JOIN produksi ON produk.produk_id = produksi.produk_id
+          where no_produksi = '$iddata'"));
 
       if($jumlah_bahan > 0){
         while($rows = $databahan2->fetch_array()){
-            $biayabahan = $biayabahan+$rows['biaya'];
+            $biayabahan = $biayabahan+($rows['jumlah']*$rows['harga']);
         }
       }
+      $biayabahan = $biayabahan+$dataproduk['biayaproduk'];
       $biayabahan = $biayabahan*$row['jml_produksi'];
-      $biayaproduksi = ($biayabahan+$row['biaya_tkl']);
       ?>
       <tr class="border-0">
         <td class="text-center" style="width:20px"><?= $no ?></td>
         <td align="center" height="30"><?php echo parseTanggal($row['tanggal_selesai']); ?></td>
         <td align="center"><?php echo $row['nama_produk']; ?></td>
         <td align="center"><?php echo $row['jml_produksi']; ?></td>
-        <td align="center"><?php echo 'Rp.'.number_format($row['biaya_tkl'],2,',','.');?></td>
         <td align="center">
           <?php
             if($biayabahan == 0){
@@ -146,9 +159,11 @@ $produk = mysqli_query($h, "SELECT * from produk");
           }
           ?>
         </td>
-        <td align="center">
-          Rp. <?= number_format($biayaproduksi,2,',','.')  ?>
-        </td>
+        <?php if(helper(3, $account->id_level)){ ?>
+          <td class="text-center">
+            <a target="_blank" href="<?= 'laporan/FakturProduksi.php?no_produksi='.$row['no_produksi'] ?>"><i class="fa fa-download" aria-hidden="true"></i></a>
+          </td>
+        <?php } ?>
       </tr>
       <?php
     }
